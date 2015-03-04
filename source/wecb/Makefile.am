@@ -1,0 +1,5 @@
+SUBDIRS = hnap
+bin_PROGRAMS = wecb_master
+wecb_master_CPPFLAGS = -I/var/tmp/pc-rdkb/include/dbus-1.0 -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/custom -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/include -I$(top_srcdir)/../CcspCommonLibrary/source/debug_api/include -I$(top_srcdir)/../CcspCommonLibrary/source/cosa/include -I$(top_srcdir)/../CcspCommonLibrary/source/cosa/include/linux -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/components/include -I$(top_srcdir)/../CcspCommonLibrary/source/cosa/package/slap/include -I$(top_srcdir)/../CcspCommonLibrary/source/util_api/http/include -I$(top_srcdir)/../CcspCommonLibrary/source/util_api/ansc/include -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/components/common/MessageBusHelper/include -I$(top_srcdir)/../hal/inlcude -I$(top_srcdir)/source/Custom -I$(top_srcdir)/./include $(CPPFLAGS)
+wecb_master_SOURCES = wecb_util.c wecb_upnp_agent.c slist.c wecb_master.c wecb_hnap.c
+wecb_master_LDFLAGS =  -L$(top_builddir)/../CcspCommonLibrary/lib -lccsp_common
