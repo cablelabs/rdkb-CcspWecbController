@@ -1,1 +1,1 @@
-SUBDIRS = wecb WecbSsp
+SUBDIRS = WecbSsp
