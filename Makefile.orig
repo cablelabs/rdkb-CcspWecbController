@@ -1,0 +1,103 @@
+#######################################################################
+#   Copyright [2014] [Cisco Systems, Inc.]
+# 
+#   Licensed under the Apache License, Version 2.0 (the \"License\");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+# 
+#       http://www.apache.org/licenses/LICENSE-2.0
+# 
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an \"AS IS\" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#######################################################################
+
+include $(CCSP_ROOT_DIR)/arch/ccsp_common.mk
+
+INCPATH += $(CCSP_ROOT_DIR)/hal/include
+INCPATH += $(ComponentSrcDir)/Custom
+INCPATH += $(ComponentSrcDir)/wecb
+INCPATH += $(ComponentSrcDir)/wecb/hnap
+INCPATH += $(ComponentSrcDir)/TR-181/ml
+INCPATH += $(ComponentSrcDir)/TR-181/include
+INCPATH += $(ComponentIncDir)/TR-181/ml
+#INCPATH += $(call get_board_or_arch_src_path,TR-181/board_include)
+#INCPATH += $(call get_board_or_arch_src_path,TR-181/board_ml)
+
+INCPATH += $(CCSP_OPENSOURCE_DIR)/include/libupnp
+INCPATH += $(CCSP_OPENSOURCE_DIR)/include/curl-7.28.1
+INCPATH += $(CCSP_OPENSOURCE_DIR)/include/libxml2-2.7.7
+INCPATH += $(ComponentSrcDir/source/TR-181/include
+INCPATH += $(call get_arch_or_board_src_path)
+CFLAGS += $(addprefix -I, $(INCPATH))
+
+# target for WECB SSP CcspWecbController
+target_ssp := $(ComponentBuildDir)/CcspWecbController
+
+source_files_ssp := $(call add_files_from_src,WecbSsp,'*.c')
+
+obj_files_ssp := $(addprefix $(ComponentBuildDir)/, $(source_files_ssp:%.c=%.o))
+
+-include $(obj_files_ssp:.o=.d)
+
+$(target_ssp): $(obj_files_ssp)
+
+# target for WECB backend wecb_master
+target_wecb_master := $(ComponentBuildDir)/wecb_master
+
+source_files_wecb_master := $(call add_files_from_src,wecb,'*.c')
+
+obj_files_wecb_master := $(addprefix $(ComponentBuildDir)/, $(source_files_wecb_master:%.c=%.o))
+
+-include $(obj_files_wecb_master:.o=.d)
+
+$(target_wecb_master): $(obj_files_wecb_master)
+
+# target for WECB shared library libwecb.so
+target_libwecb := $(ComponentBuildDir)/libwecb.so
+
+source_files_libwecb := $(call add_files_from_src,TR-181/sbapi,'*.c')
+source_files_libwecb += $(call add_files_from_src,TR-181/ml,'*.c')
+source_files_libwecb += $(call add_files_from_board,TR-181/board_sbapi,'*.c')
+source_files_libwecb += $(call add_files_from_board,TR-181/board_ml,'*.c')
+
+obj_files_libwecb := $(addprefix $(ComponentBuildDir)/,$(source_files_libwecb:%.c=%.o))
+
+-include $(obj_files_libwecb:.o=.d)
+
+$(target_libwecb): $(obj_files_libwecb)
+
+#
+#       set up linked libraries
+#
+
+LDFLAGS  += -lccsp_common -lpthread 
+LDFLAGS  += -lthreadutil -lixml -lupnp -lswctl -lticc
+LDFLAGS  += -lxml2 -lcurl -lsysevent -lsyscfg -lulog
+
+#
+#       set up targets
+#
+
+all: $(target_ssp) $(target_wecb_master) $(target_libwecb)
+
+.PHONY: all clean install
+
+clean:
+	rm -Rf $(ComponentBuildDir)
+
+install_targets := $(CCSP_OUT_DIR)/ccsp_msg.cfg
+# config directories from both arch, arch-board
+install_targets += $(wildcard $(ComponentArchCfgDir)/*)
+install_targets += $(wildcard $(ComponentBoardCfgDir)/*)
+
+install:
+	@echo "Installing WECB Installables"
+	@install -d -m 0755 $(CCSP_OUT_DIR)/wecb
+	@cp -f $(target_ssp) $(CCSP_OUT_DIR)/wecb
+	@cp -f $(target_libwecb) $(CCSP_OUT_DIR)/wecb
+	@cp -f $(install_targets) $(CCSP_OUT_DIR)/wecb
+	@cp -f $(target_wecb_master) $(CCSP_OUT_DIR)/
+

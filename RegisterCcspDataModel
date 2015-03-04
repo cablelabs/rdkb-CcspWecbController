@@ -1,0 +1,7 @@
+./source/WecbSsp/ssp_action.c:    pDslhCpeController->AddInterface((ANSC_HANDLE)pDslhCpeController, (ANSC_HANDLE)MsgHelper_CreateCcdMbiIf((void*)bus_handle,g_Subsystem));
+./source/WecbSsp/ssp_action.c:    pDslhCpeController->AddInterface((ANSC_HANDLE)pDslhCpeController, (ANSC_HANDLE)pWifiCcdIf);
+./source/WecbSsp/ssp_action.c:    pDslhCpeController->SetDbusHandle((ANSC_HANDLE)pDslhCpeController, bus_handle);
+./source/WecbSsp/ssp_action.c:    pDslhCpeController->Engage((ANSC_HANDLE)pDslhCpeController);
+./source/WecbSsp/ssp_action.c:    printf("%s() Call pDslhCpeController->RegisterCcspDataModel()\n", __func__)
+./source/WecbSsp/ssp_action.c:        pDslhCpeController->RegisterCcspDataModel
+./source/WecbSsp/ssp_action.c:    pDslhCpeController->Cancel((ANSC_HANDLE)pDslhCpeController);
