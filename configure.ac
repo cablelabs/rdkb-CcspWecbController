@@ -31,8 +31,6 @@ AC_C_INLINE
 AC_FUNC_MALLOC
 
 AC_CONFIG_FILES(
-	source/wecb/hnap/Makefile
-	source/wecb/Makefile
 	source/WecbSsp/Makefile
 	source/Makefile
 	Makefile
