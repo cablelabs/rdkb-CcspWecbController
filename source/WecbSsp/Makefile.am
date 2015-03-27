@@ -1,20 +1,19 @@
 AM_CFLAGS = -D_ANSC_LINUX
 AM_CFLAGS += -D_ANSC_USER
 AM_CFLAGS += -D_ANSC_LITTLE_ENDIAN_
-AM_LDFLAGS = -L$(top_builddir)/../CcspCommonLibrary/lib
-AM_LDFLAGS += -lccsp_common
-AM_LDFLAGS += -L$(top_builddir)/../Utopia/lib
+AM_LDFLAGS = -lccsp_common
 AM_LDFLAGS += -lsysevent
 AM_LDFLAGS += -lsyscfg
 AM_LDFLAGS += -lulog
 AM_LDFLAGS += -lupnp
 AM_LDFLAGS += -lxml2
 AM_LDFLAGS += -lcurl
+AM_LDFLAGS += -ldbus-1
 
 AM_CPPFLAGS = -Wall -Werror
 ACLOCAL_AMFLAGS = -I m4
 hardware_platform = i686-linux-gnu
 bin_PROGRAMS = CcspWecbController
-CcspWecbController_CPPFLAGS = -I/var/tmp/pc-rdkb/include/dbus-1.0 -I/usr/include/upnp -I/usr/include/libxml2 -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/custom -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/include -I$(top_srcdir)/../CcspCommonLibrary/source/debug_api/include -I$(top_srcdir)/../CcspCommonLibrary/source/cosa/include -I$(top_srcdir)/../CcspCommonLibrary/source/cosa/include/linux -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/components/include -I$(top_srcdir)/../CcspCommonLibrary/source/cosa/package/slap/include -I$(top_srcdir)/../CcspCommonLibrary/source/util_api/http/include -I$(top_srcdir)/../CcspCommonLibrary/source/util_api/ansc/include -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/components/common/MessageBusHelper/include -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/components/common/PoamIrepFolder -I$(top_srcdir)/../Utopia/source/include -I$(top_srcdir)/source/TR-181/ml -I$(top_srcdir)/source/TR-181/include -I$(top_srcdir)/include/TR-181/ml -I$(top_srcdir)/source/wecb -I$(top_srcdir)/source/Custom -I$(top_srcdir)/./include $(CPPFLAGS)
+CcspWecbController_CPPFLAGS = -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/custom -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/include -I$(top_srcdir)/../CcspCommonLibrary/source/debug_api/include -I$(top_srcdir)/../CcspCommonLibrary/source/cosa/include -I$(top_srcdir)/../CcspCommonLibrary/source/cosa/include/linux -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/components/include -I$(top_srcdir)/../CcspCommonLibrary/source/cosa/package/slap/include -I$(top_srcdir)/../CcspCommonLibrary/source/util_api/http/include -I$(top_srcdir)/../CcspCommonLibrary/source/util_api/ansc/include -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/components/common/MessageBusHelper/include -I$(top_srcdir)/../CcspCommonLibrary/source/ccsp/components/common/PoamIrepFolder -I$(top_srcdir)/../Utopia/source/include -I$(top_srcdir)/source/TR-181/ml -I$(top_srcdir)/source/TR-181/include -I$(top_srcdir)/include/TR-181/ml -I$(top_srcdir)/source/wecb -I$(top_srcdir)/source/Custom -I$(top_srcdir)/./include $(CPPFLAGS)
 CcspWecbController_SOURCES = ssp_main.c ssp_messagebus_interface.c ssp_action.c
-CcspWecbController_LDFLAGS =  -L$(top_builddir)/../CcspCommonLibrary/lib -lccsp_common -L$(top_builddir)/../Utopia/lib -lsysevent -lsyscfg -lulog -lupnp -lxml2 -lcurl
+CcspWecbController_LDFLAGS =  -lccsp_common -lsysevent -lsyscfg -lulog -lupnp -lxml2 -lcurl -ldbus-1
