@@ -29,7 +29,7 @@
 #include "hnap_device.h"
 #include "../wecb_hnap.h"
 #include "syscfg/syscfg.h"
-#include "libswctl.h"
+#include "ccsp_hal_ethsw.h"
 
 static MBusObj_t *mbus = NULL;
 //static HDK_ClientContext clientCtx;
@@ -4286,10 +4286,12 @@ int reserve_bridge(int ins[HS_SSID_NUM], int pvid[HS_SSID_NUM], int wecb_port)
 //Find which port WECB is connected on, 0: MoCA, 1-4: Ethernet port
 int get_phy_port(char *target_ip)
 {
-	char mac[6];
-	if(swctl_libInit() != SWCTL_OK) 
+	char                mac[6];
+    CCSP_HAL_ETHSW_PORT EthswPort   = 0;
+
+    if ( CcspHalEthSwInit() != RETURN_OK )
 	{
-		log_printf(LOG_ERR, "Init swctl lib failed\n");
+		log_printf(LOG_ERR, "Init EthSw lib failed\n");
 		return -1;
     }
 
@@ -4360,13 +4362,17 @@ int get_phy_port(char *target_ip)
 	sscanf(buf, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]);
 
 	//printf("*******%x:%x:%x:%x:%x:%x\n", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-	//find the MAC address in Marvell switch
-	if(swctl_findMacAddress(mac, &sw_port) != SWCTL_OK)
+	//find the MAC address in Ethernet switch
+    if ( CcspHalEthSwLocatePortByMacAddress(mac, &EthswPort) != RETURN_OK ) 
 	{
-		log_printf(LOG_ERR, "swctl_findMacAddress failed\n");
+		log_printf(LOG_ERR, "CcspHalEthSwLocatePortByMacAddress failed\n");
 		return -1;
 	}
-	return sw_port;
+    else
+    {
+        sw_port = EthswPort - CCSP_HAL_ETHSW_EthPort1 + 1;
+        return sw_port;
+    }
 }
 
 int check_wecb_bridge(int i, int port_index)

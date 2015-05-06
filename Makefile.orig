@@ -76,6 +76,7 @@ $(target_libwecb): $(obj_files_libwecb)
 LDFLAGS  += -lccsp_common -lpthread 
 LDFLAGS  += -lthreadutil -lixml -lupnp -lswctl -lticc
 LDFLAGS  += -lxml2 -lcurl -lsysevent -lsyscfg -lulog
+LDFLAGS  += -lhal_ethsw
 
 #
 #       set up targets
