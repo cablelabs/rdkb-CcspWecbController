@@ -74,7 +74,7 @@ static int max_client = MAX_EXT_NUM;
  *   Cookie -- Optional data specified during callback registration
  *
  ********************************************************************************/
-int WECB_UPnPAgentCallbackEventHandler(Upnp_EventType EventType, void *Event, void *Cookie)
+int WECB_UPnPHandler(Upnp_EventType EventType, void *Event, void *Cookie)
 {
 	switch ( EventType ) {
 	/* SSDP Stuff */
@@ -148,6 +148,7 @@ int WECB_UPnPAgentCallbackEventHandler(Upnp_EventType EventType, void *Event, vo
 					if(phy_port == 4)
 					{
 						log_printf(LOG_ERR, "Port 4 is dedicated for XHS, no sense occupied by WECB\n");
+						Hnap_DelDeviceByUUID(&(d_event->DeviceId[5]));
 						pthread_mutex_unlock(&device_list_mutex);
 						return 0;
 					}	
@@ -502,7 +503,7 @@ int WECB_UPnPAgentStart(char * ip_address, char *lan_if)
 	}
 
 	log_printf(LOG_INFO, "UPnP Initialized with ipaddress = %s port = %u\n", ip_address ? ip_address : "{NULL}", port);
-	rc = UpnpRegisterClient(WECB_UPnPAgentCallbackEventHandler, &ctrlpt_handle, &ctrlpt_handle);
+	rc = UpnpRegisterClient(WECB_UPnPHandler, &ctrlpt_handle, &ctrlpt_handle);
 	
 	if (rc != UPNP_E_SUCCESS) {
         log_printf(LOG_ERR, "Error registering callback function: %d\n", rc);
