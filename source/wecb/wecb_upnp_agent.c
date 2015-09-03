@@ -147,7 +147,8 @@ int WECB_UPnPAgentCallbackEventHandler(Upnp_EventType EventType, void *Event, vo
 					//printf("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n");
 					if(phy_port == 4)
 					{
-                  log_printf(LOG_ERR, "Port 4 is dedicated for XHS, no sense occupied by WECB\n");
+						log_printf(LOG_ERR, "Port 4 is dedicated for XHS, no sense occupied by WECB\n");
+						pthread_mutex_unlock(&device_list_mutex);
 						return 0;
 					}	
 #endif	

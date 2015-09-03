@@ -300,6 +300,133 @@ CosaDmlWiFi_FactoryReset()
 }
 
 #ifdef CONFIG_CISCO_HOTSPOT
+#include "ansc_platform.h"
+#include "plugin_main_apis.h"
+#include "hotspotfd.h"
+#include "dhcpsnooper.h"
+
+#define GRE_PARAM_LOCALIFS      GRE_OBJ_GREIF "%d.LocalInterfaces"
+#define GRE_OBJ_GREIF           "dmsb.hotspot.gre."
+
+extern ANSC_HANDLE bus_handle;
+extern void *  g_pDslhDmlAgent;
+static int sysevent_fd;
+static token_t sysevent_token;
+
+static int
+GrePsmGet(const char *param, char *value, int size)
+{
+    char *val;
+    CCSP_MESSAGE_BUS_INFO *businfo;
+
+    if (PSM_Get_Record_Value2(g_MessageBusHandle, g_GetSubsystemPrefix(g_pDslhDmlAgent),
+                (char *)param, NULL, &val) != CCSP_SUCCESS)
+        return -1;
+
+    snprintf(value, size, "%s", val);
+
+    businfo = g_MessageBusHandle;
+    businfo->freefunc(val);
+    return 0;
+}
+
+static int
+GrePsmGetStr(const char *param, int ins, char *value, int size)
+{
+    char rec[256], val[1024];
+
+    snprintf(rec, sizeof(rec), param, ins);
+    if (GrePsmGet(rec, val, sizeof(val)) != 0)
+        return -1;
+
+    if (size <= strlen(val))
+        return -1;
+
+    snprintf(value, size, "%s", val);
+    return 0;
+}
+
+int hotspot_update_circuit_ids(int greinst, int queuestart) 
+{
+    int retval = 0;
+    char localinterfaces[200];
+    char paramname[60];
+    char circuitid[100];
+    char outdata[80];
+    char* save = NULL;
+    char* curInt = NULL;
+    int nameSave = 0;
+    int circuitSave = 0;
+    int ssidInst = 0;
+    int size;
+    int inst;
+    parameterValStruct_t varStruct;
+    varStruct.parameterName = paramname;
+    varStruct.parameterValue = outdata;
+    
+    //snprintf(paramname, sizeof(paramname), 
+    GrePsmGetStr(GRE_PARAM_LOCALIFS, greinst, localinterfaces, sizeof(localinterfaces));
+    
+    curInt = strtok_r(localinterfaces, ",", &save);
+    
+    while (curInt) {
+        circuitSave=0;
+        //Trim off the trailing dot if it exists
+        size = strlen(curInt);
+        if (curInt[size -1] == '.')
+            curInt[size - 1]='\0';
+        
+        inst = atoi(strrchr(curInt,'.')+1);
+        
+        size = sizeof(outdata);
+        
+        if (syscfg_get(NULL, "wan_physical_ifname", paramname, sizeof(paramname)) != 0) {
+            AnscTraceWarning(("fail to get wan_physical_ifname\n"));
+            snprintf(paramname, sizeof(paramname), "erouter0");
+        }
+        if (get_if_hwaddr(paramname, circuitid, sizeof(circuitid)) != 0) {
+            AnscTraceWarning(("fail to get HW Addr for %s\n", paramname));
+            snprintf(circuitid, sizeof(circuitid), "00:00:00:00:00:00");
+        }
+
+        circuitSave = strlen(circuitid);
+        circuitSave += snprintf(circuitid + circuitSave, sizeof(circuitid) - circuitSave, ";");
+        
+        size = sizeof(outdata);
+        snprintf(paramname, sizeof(paramname),"%s.%s", curInt, "SSID");
+        retval = COSAGetParamValueByPathName(bus_handle, &varStruct, &size);
+        if ( retval != ANSC_STATUS_SUCCESS)
+            return -1;
+        circuitSave += snprintf(circuitid + circuitSave, sizeof(circuitid) - circuitSave, "%s;", varStruct.parameterValue);
+        
+        size = sizeof(outdata);
+        snprintf(paramname, sizeof(paramname), "Device.WiFi.AccessPoint.%d.Security.ModeEnabled", inst);
+        retval = COSAGetParamValueByPathName(bus_handle, &varStruct, &size);
+        if ( retval != ANSC_STATUS_SUCCESS)
+            return -1;
+        if(strcmp("None", varStruct.parameterValue)) {
+            snprintf(circuitid + circuitSave, sizeof(circuitid) - circuitSave, "s");
+        } else {
+            snprintf(circuitid + circuitSave, sizeof(circuitid) - circuitSave, "o");
+        }
+        
+        snprintf(paramname, sizeof(paramname), "snooper-queue%d-circuitID", queuestart);
+        
+        sysevent_set(sysevent_fd, sysevent_token, paramname, circuitid, 0);
+        
+        snprintf(paramname, sizeof(paramname), "snooper-ssid%d-index", queuestart++);
+        snprintf(outdata, sizeof(outdata), "%d", inst);
+        
+        sysevent_set(sysevent_fd, sysevent_token, paramname, outdata, 0);
+        
+        //sysevent set snoopereventforcircuitid_queuestart++ circuitid
+        
+        curInt = strtok_r(NULL, ",", &save);
+    }
+    
+    return queuestart;
+}
+
 static void* circuit_id_update_thread(void* arg) {
     hotspot_update_circuit_ids(1,1);
     return NULL;
