@@ -61,17 +61,15 @@ extern pthread_attr_t wecb_attr;
 static int max_client = MAX_EXT_NUM;
 
 /********************************************************************************
- * WECB_UPnPAgentCallbackEventHandler
+ * WECB_UPnPHandler
  *
  * Description: 
- *       The callback handler registered with the SDK while registering
- *       the control point.  Detects the type of callback, and passes the 
- *       request on to the appropriate function.
+ *       Handler funciton to arbiterate the calls to real function
  *
  * Parameters:
- *   EventType -- The type of callback event
- *   Event -- Data structure containing event data
- *   Cookie -- Optional data specified during callback registration
+ *   EventType -- Callback event Type
+ *   Event -- Event data structure
+ *   Cookie --Additional data ( optional )
  *
  ********************************************************************************/
 int WECB_UPnPHandler(Upnp_EventType EventType, void *Event, void *Cookie)
