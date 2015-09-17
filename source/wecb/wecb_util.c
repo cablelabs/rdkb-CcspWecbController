@@ -75,8 +75,8 @@ static pthread_mutex_t index_mutex;
 
 static pthread_mutex_t *lock_cs;
 static long *lock_count;
-static void pthreads_locking_callback(int mode,int type,char *file,int line);
-static unsigned long pthreads_thread_id(void );
+static void threads_locking_cb(int mode,int type,char *file,int line);
+static unsigned long threads_id_cb(void );
 
 void CRYPTO_thread_setup(void)
 {
@@ -91,25 +91,11 @@ void CRYPTO_thread_setup(void)
 		pthread_mutex_init(&(lock_cs[i]),NULL);
 	}
 
-	CRYPTO_set_id_callback((unsigned long (*)())pthreads_thread_id);
-	CRYPTO_set_locking_callback((void (*)())pthreads_locking_callback);
+	CRYPTO_set_id_callback((unsigned long (*)())threads_id_cb);
+	CRYPTO_set_locking_callback((void (*)())threads_locking_cb);
 }
 
-void thread_cleanup(void)
-{
-	int i;
-
-	CRYPTO_set_locking_callback(NULL);
-	for (i=0; i<CRYPTO_num_locks(); i++)
-	{
-		pthread_mutex_destroy(&(lock_cs[i]));
-	}
-
-	free(lock_cs);
-	free(lock_count);
-}
-
-void pthreads_locking_callback(int mode, int type, char *file, int line)
+void threads_locking_cb(int mode, int type, char *file, int line)
 {
 	if (mode & CRYPTO_LOCK)
 	{
@@ -122,14 +108,10 @@ void pthreads_locking_callback(int mode, int type, char *file, int line)
 	}
 }
 
-unsigned long pthreads_thread_id(void)
+unsigned long threads_id_cb(void)
 {
-	unsigned long ret;
-
-	ret = (unsigned long)pthread_self();
-	return(ret);
+	return (unsigned long)pthread_self();
 }
-
 
 bool WECB_CheckNoneEmpty(const char * src)
 {
@@ -1511,6 +1493,8 @@ void wecb_global_init()
 
 void wecb_global_uninit()
 {
+   int l;
+
 	//closelog();
 #ifdef CONFIG_CISCO_HOTSPOT
 	if(disable_all_wecb_bridge() == -1)
@@ -1522,7 +1506,14 @@ void wecb_global_uninit()
 	mbus_uninit();
 	HDK_Client_Http_Cleanup();
 	xmlCleanupParser();
-	thread_cleanup();
+	CRYPTO_set_locking_callback(NULL);
+	for (l=0; l<CRYPTO_num_locks(); l++)
+	{
+		pthread_mutex_destroy(&(lock_cs[l]));
+	}
+
+	free(lock_cs);
+	free(lock_count);
 }
 
 void wecb_sync_sys_time()
