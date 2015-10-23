@@ -42,6 +42,7 @@
 #include "ssp_global.h"
 #include "stdlib.h"
 #include "ccsp_dm_api.h"
+#include "pcdapi.h"
 
 PDSLH_CPE_CONTROLLER_OBJECT     pDslhCpeController      = NULL;
 PCOMPONENT_COMMON_DM            g_pComponent_Common_Dm  = NULL;
@@ -396,7 +397,8 @@ int main(int argc, char* argv[])
     	signal(SIGQUIT, sig_handler);
     	signal(SIGHUP, sig_handler);
     }
-
+    printf("Registering PCD exception handler for WecbCcspController \n");
+    PCD_api_register_exception_handlers( argv[0], NULL );
     cmd_dispatch('e');
 
     // printf("Calling Docsis\n");
