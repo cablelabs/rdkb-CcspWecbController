@@ -15,8 +15,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
-
+ */
 /**********************************************************************
    Copyright [2014] [Cisco Systems, Inc.]
  
@@ -89,6 +88,7 @@ int main()
 	pthread_t pam_sk_thread;
     pthread_t wecb_time_thread;
 	pthread_t wecb_sync_thread;
+	pthread_t wecb_signal_thread;
 	char lan_ip[64], lan_if[64];
 	char **all_device = NULL;
 	int device_number = 0, j, event_value = 0;
@@ -137,7 +137,7 @@ int main()
 	syscfg_get(NULL, "lan_ifname", lan_if, sizeof(lan_if));
 
 	//register signal handler to free global device list
-	wecb_reg_signal();
+	//wecb_reg_signal();
 
 	//start socket to receive message from PAM
 	pthread_create(&pam_sk_thread, &wecb_attr, wecb_sk_server, NULL);
@@ -145,6 +145,7 @@ int main()
 	//pthread_detach(pam_sk_thread);
 	pthread_create(&wecb_time_thread, &wecb_attr, wecb_sync_sys_time, NULL);
 	log_printf(LOG_INFO, "create pthread %d\n", wecb_time_thread);
+	pthread_create(&wecb_signal_thread, &wecb_attr, wecb_signal, NULL);
 	//pthread_detach(wecb_time_thread);
 
 	WECB_UPnPAgentStart(lan_ip, lan_if);

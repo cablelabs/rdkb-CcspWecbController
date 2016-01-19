@@ -15,8 +15,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
-
+ */
 /**********************************************************************
    Copyright [2014] [Cisco Systems, Inc.]
  
@@ -78,6 +77,8 @@
 #include "syscfg/syscfg.h"
 #include "autoconf.h"
 
+sem_t sem;
+int	recv_signal = 0;
 pthread_attr_t wecb_attr;
 extern pthread_mutex_t device_list_mutex;
 static int se_fd1 = 0, ext_count = 0; 
@@ -901,8 +902,6 @@ EXIT1:
 bool wecb_sync_thread(char *id)
 {
 	char device_id[MAX_STRING_LEN];
-
-   printf("Entering %s() \n", __func__);
 	if(id == NULL)
 	{
 		log_printf(LOG_ERR, "error input\n");
@@ -918,7 +917,7 @@ bool wecb_sync_thread(char *id)
 	HDK_ClientContext *pCtx = NULL; 
 	int hnap_retry = 0;
 	memset(uri, 0, sizeof(uri));
-	int ret = false, radio_down = 0, i = 0, index = -1;
+	int ret = false, radio_down = 0, i = 0, j = 0, index = -1;
 	char addr[160]; 
 
 	pthread_t self = pthread_self();	
@@ -930,8 +929,7 @@ bool wecb_sync_thread(char *id)
 		if(pDevice == NULL)
 		{
 			pthread_mutex_unlock(&device_list_mutex);
-			printf("Device %s is offline, no need to sync\n", addr);
-         log_printf(LOG_WARNING, "Device %s is offline, no need to sync\n", addr);
+			log_printf(LOG_WARNING, "Device %s is offline, no need to sync\n", addr);
 			goto EXIT;
 		}
 		
@@ -952,8 +950,7 @@ bool wecb_sync_thread(char *id)
 
 		if(pCtx == NULL)
 		{
-			printf("init client context failed\n");
-         log_printf(LOG_ERR, "init client context failed\n");
+			log_printf(LOG_ERR, "init client context failed\n");
 			sleep(1);
 		}
 	}
@@ -965,8 +962,7 @@ bool wecb_sync_thread(char *id)
 		
 		if(pDevice == NULL || !pDevice->thread || !pthread_equal(pDevice->thread, self))
 		{
-			printf("Device %s is offline, exit myself\n", addr);
-         log_printf(LOG_WARNING, "Device %s is offline, exit myself\n", addr);
+			log_printf(LOG_WARNING, "Device %s is offline, exit myself\n", addr);
 			pthread_mutex_unlock(&device_list_mutex);
 			goto EXIT;
 		}
@@ -998,9 +994,8 @@ bool wecb_sync_thread(char *id)
 
 				if(pCtx == NULL)
 				{
-					printf("init client context failed\n");
-               log_printf(LOG_ERR, "init client context failed\n");
-   				sleep(1);
+					log_printf(LOG_ERR, "init client context failed\n");
+					sleep(1);
 					continue;
 				}
 				else
@@ -1020,14 +1015,11 @@ bool wecb_sync_thread(char *id)
 			pthread_mutex_lock(&index_mutex);
 			if(entry_index)
 			{
-				for(index = -1, i = 1; i <= 0xFF; i *= 2)
+				for(index = -1, j = 0, i = 1; i <= 0xFF; i *= 2, j++)
 				{
 					if (entry_index & i)
-					{	
-						if(i == 1)
-							index = 0;
-						else	
-							index = sqrt(i);
+					{
+						index = j;	
 						entry_index ^= i;
 						ext_count++;
 						break;
@@ -1063,8 +1055,7 @@ bool wecb_sync_thread(char *id)
 				hnap_retry++;
 				if(hnap_retry >= MAX_RETRY)
 				{
-					printf("Device:%s is not ready\n", uri);
-               log_printf(LOG_ERR, "Device:%s is not ready\n", uri);
+					log_printf(LOG_ERR, "Device:%s is not ready\n", uri);
 					sleep(SYNC_INTERVAL);
 					break;
 				}
@@ -1088,8 +1079,7 @@ bool wecb_sync_thread(char *id)
 				hnap_retry++;
 				if(hnap_retry >= MAX_RETRY)
 				{
-					printf("GetDeviceSettings %s failed\n", uri);
-               log_printf(LOG_ERR, "GetDeviceSettings %s failed\n", uri);
+					log_printf(LOG_ERR, "GetDeviceSettings %s failed\n", uri);
 					sleep(SYNC_INTERVAL);
 					break;
 				}
@@ -1433,6 +1423,7 @@ void wecb_global_init()
 	}
 	
 	syscfg_init();
+	sem_init(&sem, 0, 0);
 	/*adding MoCA port to support Multi-LAN
 	pvid = get_primary_lan_pvid();
 	while(pvid == -1)
@@ -1525,14 +1516,15 @@ void wecb_global_uninit()
 	mbus_uninit();
 	HDK_Client_Http_Cleanup();
 	xmlCleanupParser();
-	CRYPTO_set_locking_callback(NULL);
-	for (l=0; l<CRYPTO_num_locks(); l++)
-	{
-		pthread_mutex_destroy(&(lock_cs[l]));
-	}
+	sem_destroy(&sem);  
+   CRYPTO_set_locking_callback(NULL);
+   for (l=0; l<CRYPTO_num_locks(); l++)
+   {
+      pthread_mutex_destroy(&(lock_cs[l]));
+   }
 
-	free(lock_cs);
-	free(lock_count);
+   free(lock_cs);
+   free(lock_count);
 }
 
 void wecb_sync_sys_time()
@@ -1545,4 +1537,15 @@ void wecb_sync_sys_time()
 	}
 }
 
+void wecb_signal()
+{
+	sem_wait(&sem);
+	printf("************* APS ************* \n");
+	printf("************* %d  ************* \n", recv_signal);
+	printf("************* APS ************* \n");
+	log_printf(LOG_ERR, "************* APS ************* \n");
+	log_printf(LOG_ERR, "************* %d  ************* \n", recv_signal);
+	log_printf(LOG_ERR, "************* APS ************* \n");
+	exit(1);
+}
 

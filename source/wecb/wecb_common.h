@@ -15,8 +15,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
-
+ */
 /**********************************************************************
    Copyright [2014] [Cisco Systems, Inc.]
  
@@ -56,7 +55,7 @@
 #define WECB_HS_BRIDGE_INS							"wecb_hhs_bridge_ins"
 #define WECB_HS_BRLAN_INS							"wecb_hhs_brlan_ins"
 #define WECB_HS_PVID_INS							"wecb_hhs_pvid_ins"
-#define BR_PORT_NUM									4
+#define BR_PORT_NUM									3
 #define WECB_HS_PSM_ENTRY							"dmsb.wecb.hhs_extra_bridges"
 
 enum PAM_EVENT{SSID_SET=0x1, RADIO_SET=0x2, WPS_SET=0x4, TIME_SET=0x8, QUERY_ALL=0xFFFFFFFF};

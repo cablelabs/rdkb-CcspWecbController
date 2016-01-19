@@ -15,8 +15,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
-
+ */
 /**********************************************************************
    Copyright [2014] [Cisco Systems, Inc.]
  
@@ -101,6 +100,7 @@
 #include "hnap/hdk.h"
 #include "wecb_common.h"
 #include <stdbool.h>
+#include <semaphore.h>
 
 #define WECB_STACK_SIZE 1024*1024
 
@@ -109,6 +109,7 @@ enum {EVENT_ERROR=-1, EVENT_OK, EVENT_TIMEOUT, EVENT_WAN_UP=0x10, EVENT_WAN_DOWN
 
 bool WECB_CheckNoneEmpty(const char * src);
 void wecb_reg_signal();
+void wecb_signal();
 int wecb_get_if_ip(char *if_name, char *ip, int len);
 unsigned int htoi(char s[]);
 bool stringtoip(char s[], HDK_IPAddress *ip);
