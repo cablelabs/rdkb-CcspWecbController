@@ -15,8 +15,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
-*/
-
+ */
 /**********************************************************************
    Copyright [2014] [Cisco Systems, Inc.]
  
@@ -72,6 +71,11 @@
 #include <sys/socket.h>
 #include "syscfg/syscfg.h"
 #include "autoconf.h"
+#include <semaphore.h>
+
+
+extern sem_t sem;
+extern int	recv_signal;
 
 UpnpClient_Handle ctrlpt_handle = -1;
 pthread_mutex_t device_list_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -80,15 +84,17 @@ extern pthread_attr_t wecb_attr;
 static int max_client = MAX_EXT_NUM;
 
 /********************************************************************************
- * WECB_UPnPHandler
+ * WECB_UPnPAgentCallbackEventHandler
  *
  * Description: 
- *       Handler funciton to arbiterate the calls to real function
+ *       The callback handler registered with the SDK while registering
+ *       the control point.  Detects the type of callback, and passes the 
+ *       request on to the appropriate function.
  *
  * Parameters:
- *   EventType -- Callback event Type
- *   Event -- Event data structure
- *   Cookie --Additional data ( optional )
+ *   EventType -- The type of callback event
+ *   Event -- Data structure containing event data
+ *   Cookie -- Optional data specified during callback registration
  *
  ********************************************************************************/
 int WECB_UPnPHandler(Upnp_EventType EventType, void *Event, void *Cookie)
@@ -164,9 +170,7 @@ int WECB_UPnPHandler(Upnp_EventType EventType, void *Event, void *Cookie)
 					//printf("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n");
 					if(phy_port == 4)
 					{
-						log_printf(LOG_ERR, "Port 4 is dedicated for XHS, no sense occupied by WECB\n");
-						Hnap_DelDeviceByUUID(&(d_event->DeviceId[5]));
-						pthread_mutex_unlock(&device_list_mutex);
+                  log_printf(LOG_ERR, "Port 4 is dedicated for XHS, no sense occupied by WECB\n");
 						return 0;
 					}	
 #endif	
@@ -253,7 +257,27 @@ int WECB_UPnPHandler(Upnp_EventType EventType, void *Event, void *Cookie)
 
 						strncpy(pDevice->location, d_event->Location, MAX_STRING_LEN - 1);
 						strncpy(pDevice->device_type, d_event->DeviceType, MAX_STRING_LEN - 1);
-#ifdef CONFIG_CISCO_HOTSPOT						
+#ifdef CONFIG_CISCO_HOTSPOT	
+						phy_port = get_phy_port(wecb_ip);
+						if(phy_port == -1)
+						{
+							log_printf(LOG_ERR, "Get WECB physical port index failed\n");
+							Hnap_DelDeviceByUUID(&(d_event->DeviceId[5]));
+							pthread_mutex_unlock(&device_list_mutex);
+							return 0;	
+						}
+						//printf("WECB physical port is %d\n", phy_port);	
+#ifdef CONFIG_CISCO_XHS
+						//printf("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&\n");
+						if(phy_port == 4)
+						{
+							log_printf(LOG_ERR, "Port 4 is dedicated for XHS, no sense occupied by WECB\n");
+							Hnap_DelDeviceByUUID(&(d_event->DeviceId[5]));
+							pthread_mutex_unlock(&device_list_mutex);
+							return 0;
+						}	
+#endif	
+					
 						if(reserve_bridge(pDevice->bridge_ins, pDevice->pvid, phy_port) == -1)
 						{
 							int i = 0;
@@ -363,7 +387,7 @@ int WECB_UPnPHandler(Upnp_EventType EventType, void *Event, void *Cookie)
             }
             else 
 			{
-				log_printf(LOG_WARNING, "Not supported Device type: %s\n", d_event->DeviceType);
+				//log_printf(LOG_WARNING, "Not supported Device type: %s\n", d_event->DeviceType);
 				return 0;
 			};
         }
@@ -492,24 +516,22 @@ int WECB_UPnPAgentStart(char * ip_address, char *lan_if)
 	//		 "\tipaddress = %s port = %u\n",
 	//		 ip_address ? ip_address : "{NULL}", port);
 
-	
+	/*
 	rc = UpnpInit(ip_address, port);
 	
 	if (rc != UPNP_E_SUCCESS) {
         log_printf(LOG_ERR, "UpnpInit() Error: %d\n", rc);
 	    UpnpFinish();
         return -1;
-	}
+	}*/
 	//Adding IPv6 support for libupnp
-	/*
-   rc = UpnpInit2(lan_if, 0);
+	rc = UpnpInit4(lan_if, ip_address, 0);
 
 	if (rc != UPNP_E_SUCCESS) {
-        log_printf(LOG_ERR, "UpnpInit2() Error: %d\n", rc);
+        log_printf(LOG_ERR, "UpnpInit4() Error: %d\n", rc);
 	    UpnpFinish();
         return -1;
 	}
-   */
 
 	if (!ip_address) {
 		ip_address = UpnpGetServerIpAddress();
@@ -563,8 +585,8 @@ void* WECB_SSDP_DiscoveryAll(void *P)
         int res = UpnpSearchAsync(
             ctrlpt_handle,
             WECB_MX,
-            "hnap:all", //both ssdp:all and hnap:all work for HNAP devices.
-            //"hnap:WiFiExtender",
+            //"hnap:all", //both ssdp:all and hnap:all work for HNAP devices.
+            "hnap:WiFiExtender",
             NULL 
         );
         if(res != UPNP_E_SUCCESS) {
@@ -592,19 +614,8 @@ void* WECB_SSDP_CheckAllTimer(void *P)
 
 void wecb_sig_handler(int signal)
 {
-	log_printf(LOG_ERR, "Received signal %d\n", signal);
-	// can's use pthread mutex in signal handler
-	//WECB_UPnPAgentStop();
-	//UpnpUnRegisterClient(ctrlpt_handle);
-	//UpnpFinish();
-	//wecb_global_uninit();
-#ifdef CONFIG_CISCO_HOTSPOT
-	if(disable_all_wecb_bridge() == -1)
-	{
-		log_printf(LOG_ERR, "Disable all WECB dedicated bridge failed\n");
-	}
-#endif
-	exit(1);
+	recv_signal = signal;
+	sem_post(&sem);
 }
 
 
