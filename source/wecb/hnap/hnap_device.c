@@ -3187,8 +3187,7 @@ void update_online_client(char *ip, char *mac, char flag)
 
 int force_radio_down(char *addr)
 {
-	char path[MAX_BUF], val[1024], *p;
-        int len = 0;
+	char path[MAX_BUF], val[1024];
 	
 	if(!strlen(addr))
 	{
@@ -3204,8 +3203,7 @@ int force_radio_down(char *addr)
 		return 0;
 	}
 
-        len = strlen(addr);
-        if((p = strstr(val, addr)) && ((*(p+len) < '0') || (*(p+len) > '9')))
+	if(strstr(val, addr))
 	{
 		/*
 		if (MBus_SetParamVal(mbus, "Device.MoCA.X_CISCO_COM_WiFi_Extender.X_CISCO_COM_Radio_Updated", MBUS_PT_BOOL, true, 1) != 0)
@@ -4321,7 +4319,6 @@ int get_phy_port(char *target_ip)
 	char path[MAX_BUF], val[MAX_BUF];
 	char buf[MAX_BUF], cmd[MAX_BUF]; 
 	FILE *fp = NULL;
-        char lan_ifname[64];
 
 	if(!target_ip)
 	{
@@ -4329,10 +4326,6 @@ int get_phy_port(char *target_ip)
 		return -1;
 	}
 
-        //force usg to refresh ARP cache for APS1
-        syscfg_get(NULL, "lan_ifname", lan_ifname, sizeof(lan_ifname));
-        sprintf(buf, "ping %s -c 2 -I %s -W 1 >/dev/null 2>&1", target_ip, lan_ifname);
-        system(buf);
 	/*
 	if (MBus_FindObjectIns(mbus, "Device.DHCPv4.Server.Pool.1.Client.", "IPv4Address.1.IPAddress", target_ip, insPath, &device_num) != 0)
 	{
@@ -4388,14 +4381,17 @@ int get_phy_port(char *target_ip)
 	sscanf(buf, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx", &mac[0], &mac[1], &mac[2], &mac[3], &mac[4], &mac[5]);
 
 	//printf("*******%x:%x:%x:%x:%x:%x\n", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-	//find the MAC address in Marvell switch
-        if ( CcspHalEthSwLocatePortByMacAddress(mac, &sw_port) != RETURN_OK )
-        {
-                log_printf(LOG_ERR, "CcspHalEthSwLocatePortByMacAddress failed\n");
-                return -1;
-        }
-
-	return sw_port;
+	//find the MAC address in Ethernet switch
+    if ( CcspHalEthSwLocatePortByMacAddress(mac, &EthswPort) != RETURN_OK ) 
+	{
+		log_printf(LOG_ERR, "CcspHalEthSwLocatePortByMacAddress failed\n");
+		return -1;
+	}
+    else
+    {
+        sw_port = EthswPort - CCSP_HAL_ETHSW_EthPort1 + 1;
+        return sw_port;
+    }
 }
 
 int check_wecb_bridge(int i, int port_index)
