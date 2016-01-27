@@ -1382,7 +1382,7 @@ bool SetRadios(HDK_ClientContext *pCtx , void *rt)
 			goto EXIT;
 		}
 		
-		if(GetParamValueForIns(mbus, radio_path, "X_CISCO_COM_BeaconInterval", mask, val, sizeof(val)))
+		if(GetParamValueForIns(mbus, radio_path, "X_COMCAST-COM_BeaconInterval", mask, val, sizeof(val)))
 		{	
 			log_printf(LOG_INFO, "radio %d beacon interval is %s\n", mask, val);
 			HDK_Set_Int(pStr2, HDK_Element_Cisco_BeaconInterval, atoi(val));
