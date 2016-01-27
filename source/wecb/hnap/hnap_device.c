@@ -3187,7 +3187,8 @@ void update_online_client(char *ip, char *mac, char flag)
 
 int force_radio_down(char *addr)
 {
-	char path[MAX_BUF], val[1024];
+	char path[MAX_BUF], val[1024], *p;
+        int len = 0;
 	
 	if(!strlen(addr))
 	{
@@ -3203,7 +3204,8 @@ int force_radio_down(char *addr)
 		return 0;
 	}
 
-	if(strstr(val, addr))
+        len = strlen(addr);
+        if((p = strstr(val, addr)) && ((*(p+len) < '0') || (*(p+len) > '9')))
 	{
 		/*
 		if (MBus_SetParamVal(mbus, "Device.MoCA.X_CISCO_COM_WiFi_Extender.X_CISCO_COM_Radio_Updated", MBUS_PT_BOOL, true, 1) != 0)
@@ -4319,6 +4321,7 @@ int get_phy_port(char *target_ip)
 	char path[MAX_BUF], val[MAX_BUF];
 	char buf[MAX_BUF], cmd[MAX_BUF]; 
 	FILE *fp = NULL;
+        char lan_ifname[64];
 
 	if(!target_ip)
 	{
@@ -4326,6 +4329,10 @@ int get_phy_port(char *target_ip)
 		return -1;
 	}
 
+        //force usg to refresh ARP cache for APS1
+        syscfg_get(NULL, "lan_ifname", lan_ifname, sizeof(lan_ifname));
+        sprintf(buf, "ping %s -c 2 -I %s -W 1 >/dev/null 2>&1", target_ip, lan_ifname);
+        system(buf);
 	/*
 	if (MBus_FindObjectIns(mbus, "Device.DHCPv4.Server.Pool.1.Client.", "IPv4Address.1.IPAddress", target_ip, insPath, &device_num) != 0)
 	{

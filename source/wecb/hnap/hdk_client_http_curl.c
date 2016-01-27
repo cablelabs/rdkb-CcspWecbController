@@ -343,18 +343,35 @@ int HDK_Client_Http_RequestSend(void* pRequestCtx,
         {
           break;
         }
-		//let curl not verify server's cert	
-		code = curl_easy_setopt(pCtx->pCURL, CURLOPT_SSL_VERIFYPEER, 0);
-		if (CURL_FAILED(code))
+	//let curl not verify server's cert	
+	code = curl_easy_setopt(pCtx->pCURL, CURLOPT_SSL_VERIFYPEER, 0);
+	if (CURL_FAILED(code))
         {
             break;
-		}
+	}
+
+        //set ipv6 interface for curl link local HNAP
+        char lan_if[64];
+        int rc;
+        strcpy(lan_if, "if!");
+        rc = syscfg_get(NULL, "lan_ifname", lan_if + strlen(lan_if), sizeof(lan_if) - strlen(lan_if));
+        code = curl_easy_setopt(pCtx->pCURL, CURLOPT_INTERFACE, lan_if);
+        if (rc || CURL_FAILED(code))
+        {
+            break;
+        }
+
+        code = curl_easy_setopt(pCtx->pCURL, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_WHATEVER);
+        if (CURL_FAILED(code))
+        {
+            break;
+        }
 
         code = curl_easy_setopt(pCtx->pCURL, CURLOPT_HTTPHEADER, pCtx->pHeaderList);
         if (CURL_FAILED(code))
         {
             break;
-		}
+	}
 
         /*
          * If the client-supplied callbacks aborted the operation (and we get CURLE_WRITE_ERROR),
