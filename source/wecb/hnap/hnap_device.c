@@ -52,7 +52,7 @@
 
 static MBusObj_t *mbus = NULL;
 //static HDK_ClientContext clientCtx;
-static int iTimeoutmSecs = 5000;
+static int iTimeoutmSecs = 10000;
 static int iTimeoutmSecs_al = 10000;
 
 char* all_wecb_ports[5]= 
