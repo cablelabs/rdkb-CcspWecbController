@@ -345,6 +345,7 @@ int HDK_Client_Http_RequestSend(void* pRequestCtx,
         }
 	//let curl not verify server's cert	
 	code = curl_easy_setopt(pCtx->pCURL, CURLOPT_SSL_VERIFYPEER, 0);
+	code = curl_easy_setopt(pCtx->pCURL, CURLOPT_SSL_VERIFYHOST, 0);
 	if (CURL_FAILED(code))
         {
             break;

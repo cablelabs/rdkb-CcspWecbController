@@ -431,7 +431,7 @@ static int SendHNAPRequest(HDK_Struct* pInput, HDK_Struct* pOutput, HDK_ParseErr
                 /* POST content */
                 HDK_Write(rgWriteFunctions[ixWrite].pCtx, rgWriteFunctions[ixWrite].pfnWrite, 0,
                           "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                          "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"\nsoap:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n"
+                          "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" soap:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">\n"
                           "<soap:Body>\n");
 
                 HDK_Serialize(rgWriteFunctions[ixWrite].pCtx, rgWriteFunctions[ixWrite].pfnWrite, 0, pInput, pInput);
