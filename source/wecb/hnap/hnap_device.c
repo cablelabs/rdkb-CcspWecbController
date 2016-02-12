@@ -1904,7 +1904,7 @@ bool SetSSIDSettings(HDK_ClientContext *pCtx, void *rt)
 			goto EXIT;
 		}
 		
-		snprintf(path, sizeof(path), "%s%d.Security.X_CISCO_COM_KeyPassphrase", "Device.WiFi.AccessPoint.", i);
+		snprintf(path, sizeof(path), "%s%d.Security.X_COMCAST-COM_KeyPassphrase", "Device.WiFi.AccessPoint.", i);
 		if(MBus_GetParamVal(mbus, path, val, sizeof(val)) == 0)
 		{
 			HDK_Set_String(pStr3, HDK_Element_Cisco_Passphrase, val);
