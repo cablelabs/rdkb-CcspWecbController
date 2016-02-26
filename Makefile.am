@@ -28,4 +28,8 @@ libwecb_la_SOURCES= \
 	source/TR-181/ml/cosa_wifi_internal.c \
 	source/TR-181/ml/plugin_main_apis.c \
 	source/TR-181/ml/plugin_main.c \
-	source-arm/TR-181/board_sbapi/cosa_wifi_apis.c
+	source-arm/TR-181/board_sbapi/cosa_wifi_apis.c \
+	source/TR-181/ml/cosa_led_dml.c \
+	source/TR-181/ml/cosa_led_internal.c \
+	source-arm/TR-181/board_sbapi/cosa_led_apis.c 
+

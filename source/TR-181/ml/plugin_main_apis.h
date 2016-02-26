@@ -121,6 +121,8 @@ extern COSARegisterCallBackAfterInitDmlProc  g_RegisterCallBackAfterInitDml;
 #define COSA_DATAMODEL_BASE_OID                                 0
 #define COSA_DATAMODEL_WIFI_OID                                 19
 #define COSA_DATAMODEL_MOCA_WIFI_EXTENDER_OID                   36
+#define COSA_DATAMODEL_LED_OID                                  42
+
 
 /*
  * This is the cosa datamodel backend manager which is used to manager all backend object
@@ -129,7 +131,8 @@ extern COSARegisterCallBackAfterInitDmlProc  g_RegisterCallBackAfterInitDml;
     /* duplication of the base object class content */                                      \
     COSA_BASE_CONTENT                                                                       \
     ANSC_HANDLE                  hWifi;                                                       \
-    PCOSA_PLUGIN_INFO            hCosaPluginInfo;
+    ANSC_HANDLE                  hLED;                                                       \
+    PCOSA_PLUGIN_INFO            hCosaPluginInfo;    
 
 typedef  struct
 _COSA_BACKEND_MANAGER_OBJECT
