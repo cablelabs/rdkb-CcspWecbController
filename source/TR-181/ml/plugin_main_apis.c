@@ -195,6 +195,8 @@ CosaBackEndManagerInitialize
     printf("************* WECB initialize ******************\n");
     
     pMyObject->hWifi            = (ANSC_HANDLE)CosaWifiCreate();
+	
+    pMyObject->hLED             = (ANSC_HANDLE)CosaLEDCreate();
     AnscTraceWarning(("  CosaCableModemCreate done!\n"));
     
     /*create a thread to handle the sysevent asynchronously after all of the dmls created
@@ -248,8 +250,11 @@ CosaBackEndManagerRemove
         CosaWifiRemove((ANSC_HANDLE)pMyObject->hWifi);
     }
 
-   
-
+    if ( pMyObject->hLED )
+    {
+        CosaLEDRemove((ANSC_HANDLE)pMyObject->hLED);
+    }
+  
     /* Remove self */
     AnscFreeMemory((ANSC_HANDLE)pMyObject);
 
