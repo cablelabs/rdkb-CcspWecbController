@@ -253,8 +253,13 @@ static HDK_ElementNode s_elements[] =
     { /* HDK_Element_Cisco_GetExtenderStatus */ 1, "GetExtenderStatus" },
     { /* HDK_Element_Cisco_GetExtenderStatusResponse */ 1, "GetExtenderStatusResponse" },
     { /* HDK_Element_Cisco_GetExtenderStatusResult */ 1, "GetExtenderStatusResult" },
+    { /* HDK_Element_Cisco_GetLEDStatus */ 1, "GetLEDStatus" },
+    { /* HDK_Element_Cisco_GetLEDStatusResponse */ 1, "GetLEDStatusResponse" },
+    { /* HDK_Element_Cisco_GetLEDStatusResult */ 1, "GetLEDStatusResult" },
     { /* HDK_Element_Cisco_GuardInterval */ 1, "GuardInterval" },
     { /* HDK_Element_Cisco_Hour */ 1, "Hour" },
+    { /* HDK_Element_Cisco_LEDList */ 1, "LEDList" },
+    { /* HDK_Element_Cisco_LEDSettings */ 1, "LEDSettings" },
     { /* HDK_Element_Cisco_MACAddress */ 1, "MACAddress" },
     { /* HDK_Element_Cisco_MACList */ 1, "MACList" },
     { /* HDK_Element_Cisco_MaxClients */ 1, "MaxClients" },
@@ -292,6 +297,9 @@ static HDK_ElementNode s_elements[] =
     { /* HDK_Element_Cisco_SetDoRestart */ 1, "SetDoRestart" },
     { /* HDK_Element_Cisco_SetDoRestartResponse */ 1, "SetDoRestartResponse" },
     { /* HDK_Element_Cisco_SetDoRestartResult */ 1, "SetDoRestartResult" },
+    { /* HDK_Element_Cisco_SetLEDs */ 1, "SetLEDs" },
+    { /* HDK_Element_Cisco_SetLEDsResponse */ 1, "SetLEDsResponse" },
+    { /* HDK_Element_Cisco_SetLEDsResult */ 1, "SetLEDsResult" },
     { /* HDK_Element_Cisco_SetRadios */ 1, "SetRadios" },
     { /* HDK_Element_Cisco_SetRadiosResponse */ 1, "SetRadiosResponse" },
     { /* HDK_Element_Cisco_SetRadiosResult */ 1, "SetRadiosResult" },
@@ -407,187 +415,201 @@ static HDK_ElementTreeNode s_elementTree[] =
     { /* 5 */ 2, HDK_Element_Cisco_GetClientInfoResponse, HDK_Type__STRUCT__, 0x00 },
     { /* 6 */ 2, HDK_Element_Cisco_GetExtenderStatus, HDK_Type__STRUCT__, 0x00 },
     { /* 7 */ 2, HDK_Element_Cisco_GetExtenderStatusResponse, HDK_Type__STRUCT__, 0x00 },
-    { /* 8 */ 2, HDK_Element_Cisco_SetDoRestart, HDK_Type__STRUCT__, 0x00 },
-    { /* 9 */ 2, HDK_Element_Cisco_SetDoRestartResponse, HDK_Type__STRUCT__, 0x00 },
-    { /* 10 */ 2, HDK_Element_Cisco_SetRadios, HDK_Type__STRUCT__, 0x00 },
-    { /* 11 */ 2, HDK_Element_Cisco_SetRadiosResponse, HDK_Type__STRUCT__, 0x00 },
-    { /* 12 */ 2, HDK_Element_Cisco_SetSSIDSettings, HDK_Type__STRUCT__, 0x00 },
-    { /* 13 */ 2, HDK_Element_Cisco_SetSSIDSettingsResponse, HDK_Type__STRUCT__, 0x00 },
-    { /* 14 */ 2, HDK_Element_Cisco_SetTOD, HDK_Type__STRUCT__, 0x00 },
-    { /* 15 */ 2, HDK_Element_Cisco_SetTODResponse, HDK_Type__STRUCT__, 0x00 },
-    { /* 16 */ 2, HDK_Element_Cisco_SetWPS, HDK_Type__STRUCT__, 0x00 },
-    { /* 17 */ 2, HDK_Element_Cisco_SetWPSResponse, HDK_Type__STRUCT__, 0x00 },
-    { /* 18 */ 2, HDK_Element_PN_GetDeviceSettings, HDK_Type__STRUCT__, 0x00 },
-    { /* 19 */ 2, HDK_Element_PN_GetDeviceSettingsResponse, HDK_Type__STRUCT__, 0x00 },
-    { /* 20 */ 2, HDK_Element_PN_GetWLanRadios, HDK_Type__STRUCT__, 0x00 },
-    { /* 21 */ 2, HDK_Element_PN_GetWLanRadiosResponse, HDK_Type__STRUCT__, 0x00 },
-    { /* 22 */ 2, HDK_Element_PN_IsDeviceReady, HDK_Type__STRUCT__, 0x00 },
-    { /* 23 */ 2, HDK_Element_PN_IsDeviceReadyResponse, HDK_Type__STRUCT__, 0x00 },
-    { /* 24 */ 3, HDK_Element_faultcode, HDK_Type__STRING__, 0x00 },
-    { /* 25 */ 3, HDK_Element_faultstring, HDK_Type__STRING__, 0x00 },
-    { /* 26 */ 3, HDK_Element_faultactor, HDK_Type__STRING__, 0x01 },
-    { /* 27 */ 3, HDK_Element_detail, HDK_Type__STRING__, 0x01 },
-    { /* 28 */ 5, HDK_Element_Cisco_GetClientInfoResult, HDK_Type__RESULT__, 0x00 },
-    { /* 29 */ 5, HDK_Element_Cisco_ClientInfoLists, HDK_Type__STRUCT__, 0x00 },
-    { /* 30 */ 7, HDK_Element_Cisco_GetExtenderStatusResult, HDK_Type__RESULT__, 0x00 },
-    { /* 31 */ 7, HDK_Element_Cisco_ExtenderState, HDK_Type__INT__, 0x00 },
-    { /* 32 */ 7, HDK_Element_Cisco_RadioList, HDK_Type__STRUCT__, 0x00 },
-    { /* 33 */ 7, HDK_Element_Cisco_SSIDList, HDK_Type__STRUCT__, 0x00 },
-    { /* 34 */ 9, HDK_Element_Cisco_SetDoRestartResult, HDK_Type__RESULT__, 0x00 },
-    { /* 35 */ 10, HDK_Element_Cisco_RadioList, HDK_Type__STRUCT__, 0x00 },
-    { /* 36 */ 11, HDK_Element_Cisco_SetRadiosResult, HDK_Type__RESULT__, 0x00 },
-    { /* 37 */ 12, HDK_Element_Cisco_SSIDList, HDK_Type__STRUCT__, 0x00 },
-    { /* 38 */ 13, HDK_Element_Cisco_SetSSIDSettingsResult, HDK_Type__RESULT__, 0x00 },
-    { /* 39 */ 14, HDK_Element_Cisco_Seconds, HDK_Type__INT__, 0x00 },
-    { /* 40 */ 14, HDK_Element_Cisco_Minutes, HDK_Type__INT__, 0x00 },
-    { /* 41 */ 14, HDK_Element_Cisco_Hour, HDK_Type__INT__, 0x00 },
-    { /* 42 */ 14, HDK_Element_Cisco_MonthDay, HDK_Type__INT__, 0x00 },
-    { /* 43 */ 14, HDK_Element_Cisco_Month, HDK_Type__INT__, 0x00 },
-    { /* 44 */ 14, HDK_Element_Cisco_Year, HDK_Type__INT__, 0x00 },
-    { /* 45 */ 14, HDK_Element_Cisco_WDay, HDK_Type__INT__, 0x00 },
-    { /* 46 */ 14, HDK_Element_Cisco_YDay, HDK_Type__INT__, 0x00 },
-    { /* 47 */ 14, HDK_Element_Cisco_Dst, HDK_Type__BOOL__, 0x00 },
-    { /* 48 */ 14, HDK_Element_Cisco_Epoch, HDK_Type__INT__, 0x00 },
-    { /* 49 */ 15, HDK_Element_Cisco_SetTODResult, HDK_Type__RESULT__, 0x00 },
-    { /* 50 */ 16, HDK_Element_Cisco_WPSEnable, HDK_Type__BOOL__, 0x00 },
-    { /* 51 */ 16, HDK_Element_Cisco_PINCode, HDK_Type__STRING__, 0x00 },
-    { /* 52 */ 16, HDK_Element_Cisco_SSIDIndex, HDK_Type__STRING__, 0x00 },
-    { /* 53 */ 17, HDK_Element_Cisco_SetWPSResult, HDK_Type__RESULT__, 0x00 },
-    { /* 54 */ 19, HDK_Element_PN_GetDeviceSettingsResult, HDK_Type__RESULT__, 0x00 },
-    { /* 55 */ 19, HDK_Element_PN_Type, HDK_Type_PN_DeviceType, 0x00 },
-    { /* 56 */ 19, HDK_Element_PN_DeviceName, HDK_Type__STRING__, 0x00 },
-    { /* 57 */ 19, HDK_Element_PN_VendorName, HDK_Type__STRING__, 0x00 },
-    { /* 58 */ 19, HDK_Element_PN_ModelDescription, HDK_Type__STRING__, 0x00 },
-    { /* 59 */ 19, HDK_Element_PN_ModelName, HDK_Type__STRING__, 0x00 },
-    { /* 60 */ 19, HDK_Element_PN_FirmwareVersion, HDK_Type__STRING__, 0x00 },
-    { /* 61 */ 19, HDK_Element_PN_PresentationURL, HDK_Type__STRING__, 0x00 },
-    { /* 62 */ 19, HDK_Element_PN_SOAPActions, HDK_Type__STRUCT__, 0x00 },
-    { /* 63 */ 19, HDK_Element_PN_SubDeviceURLs, HDK_Type__STRUCT__, 0x00 },
-    { /* 64 */ 19, HDK_Element_PN_Tasks, HDK_Type__STRUCT__, 0x00 },
-    { /* 65 */ 21, HDK_Element_PN_GetWLanRadiosResult, HDK_Type__RESULT__, 0x00 },
-    { /* 66 */ 21, HDK_Element_PN_RadioInfos, HDK_Type__STRUCT__, 0x00 },
-    { /* 67 */ 23, HDK_Element_PN_IsDeviceReadyResult, HDK_Type__RESULT__, 0x00 },
-    { /* 68 */ 29, HDK_Element_Cisco_ClientInfo, HDK_Type__STRUCT__, 0x03 },
-    { /* 69 */ 32, HDK_Element_Cisco_RadioSettings, HDK_Type__STRUCT__, 0x03 },
-    { /* 70 */ 33, HDK_Element_Cisco_SSIDSettings, HDK_Type__STRUCT__, 0x03 },
-    { /* 71 */ 35, HDK_Element_Cisco_RadioSettings, HDK_Type__STRUCT__, 0x03 },
-    { /* 72 */ 37, HDK_Element_Cisco_SSIDSettings, HDK_Type__STRUCT__, 0x03 },
-    { /* 73 */ 62, HDK_Element_PN_string, HDK_Type__STRING__, 0x03 },
-    { /* 74 */ 63, HDK_Element_PN_string, HDK_Type__STRING__, 0x03 },
-    { /* 75 */ 64, HDK_Element_PN_TaskExtension, HDK_Type__STRUCT__, 0x03 },
-    { /* 76 */ 66, HDK_Element_PN_RadioInfo, HDK_Type__STRUCT__, 0x03 },
-    { /* 77 */ 68, HDK_Element_Cisco_MACAddress, HDK_Type__MACADDRESS__, 0x00 },
-    { /* 78 */ 68, HDK_Element_Cisco_Type, HDK_Type_Cisco_DeviceInf, 0x00 },
-    { /* 79 */ 68, HDK_Element_Cisco_DeviceName, HDK_Type__STRING__, 0x01 },
-    { /* 80 */ 69, HDK_Element_Cisco_RadioID, HDK_Type__STRING__, 0x00 },
-    { /* 81 */ 69, HDK_Element_Cisco_Enable, HDK_Type__BOOL__, 0x00 },
-    { /* 82 */ 69, HDK_Element_Cisco_Mode, HDK_Type_Cisco_WiFiMode, 0x00 },
-    { /* 83 */ 69, HDK_Element_Cisco_ChannelWidth, HDK_Type__INT__, 0x00 },
-    { /* 84 */ 69, HDK_Element_Cisco_Channel, HDK_Type__INT__, 0x00 },
-    { /* 85 */ 69, HDK_Element_Cisco_SecondaryChannel, HDK_Type__INT__, 0x00 },
-    { /* 86 */ 69, HDK_Element_Cisco_BeaconInterval, HDK_Type__INT__, 0x00 },
-    { /* 87 */ 69, HDK_Element_Cisco_DTIMInterval, HDK_Type__INT__, 0x00 },
-    { /* 88 */ 69, HDK_Element_Cisco_GuardInterval, HDK_Type__INT__, 0x00 },
-    { /* 89 */ 69, HDK_Element_Cisco_Coexistance, HDK_Type__BOOL__, 0x00 },
-    { /* 90 */ 70, HDK_Element_Cisco_SSIDRadioID, HDK_Type__STRING__, 0x00 },
-    { /* 91 */ 70, HDK_Element_Cisco_SSIDIndex, HDK_Type__STRING__, 0x00 },
-    { /* 92 */ 70, HDK_Element_Cisco_SSID, HDK_Type__STRING__, 0x00 },
-    { /* 93 */ 70, HDK_Element_Cisco_BSSID, HDK_Type__STRING__, 0x01 },
-    { /* 94 */ 70, HDK_Element_Cisco_SSIDEnabled, HDK_Type__BOOL__, 0x00 },
-    { /* 95 */ 70, HDK_Element_Cisco_SSIDBroadcast, HDK_Type__BOOL__, 0x00 },
-    { /* 96 */ 70, HDK_Element_Cisco_SSIDVlanID, HDK_Type__INT__, 0x00 },
-    { /* 97 */ 70, HDK_Element_Cisco_SSIDLanBase, HDK_Type__IPADDRESS__, 0x00 },
-    { /* 98 */ 70, HDK_Element_Cisco_SSIDEncryption, HDK_Type__STRUCT__, 0x01 },
-    { /* 99 */ 70, HDK_Element_Cisco_SSIDQoS, HDK_Type__STRUCT__, 0x00 },
-    { /* 100 */ 70, HDK_Element_Cisco_MaxClients, HDK_Type__INT__, 0x00 },
-    { /* 101 */ 70, HDK_Element_Cisco_ACList, HDK_Type__STRUCT__, 0x01 },
-    { /* 102 */ 71, HDK_Element_Cisco_RadioID, HDK_Type__STRING__, 0x00 },
-    { /* 103 */ 71, HDK_Element_Cisco_Enable, HDK_Type__BOOL__, 0x00 },
-    { /* 104 */ 71, HDK_Element_Cisco_Mode, HDK_Type_Cisco_WiFiMode, 0x00 },
-    { /* 105 */ 71, HDK_Element_Cisco_ChannelWidth, HDK_Type__INT__, 0x00 },
-    { /* 106 */ 71, HDK_Element_Cisco_Channel, HDK_Type__INT__, 0x00 },
-    { /* 107 */ 71, HDK_Element_Cisco_SecondaryChannel, HDK_Type__INT__, 0x00 },
-    { /* 108 */ 71, HDK_Element_Cisco_BeaconInterval, HDK_Type__INT__, 0x00 },
-    { /* 109 */ 71, HDK_Element_Cisco_DTIMInterval, HDK_Type__INT__, 0x00 },
-    { /* 110 */ 71, HDK_Element_Cisco_GuardInterval, HDK_Type__INT__, 0x00 },
-    { /* 111 */ 71, HDK_Element_Cisco_Coexistance, HDK_Type__BOOL__, 0x00 },
-    { /* 112 */ 72, HDK_Element_Cisco_SSIDRadioID, HDK_Type__STRING__, 0x00 },
-    { /* 113 */ 72, HDK_Element_Cisco_SSIDIndex, HDK_Type__STRING__, 0x00 },
-    { /* 114 */ 72, HDK_Element_Cisco_SSID, HDK_Type__STRING__, 0x00 },
-    { /* 115 */ 72, HDK_Element_Cisco_BSSID, HDK_Type__STRING__, 0x01 },
-    { /* 116 */ 72, HDK_Element_Cisco_SSIDEnabled, HDK_Type__BOOL__, 0x00 },
-    { /* 117 */ 72, HDK_Element_Cisco_SSIDBroadcast, HDK_Type__BOOL__, 0x00 },
-    { /* 118 */ 72, HDK_Element_Cisco_SSIDVlanID, HDK_Type__INT__, 0x00 },
-    { /* 119 */ 72, HDK_Element_Cisco_SSIDLanBase, HDK_Type__IPADDRESS__, 0x00 },
-    { /* 120 */ 72, HDK_Element_Cisco_SSIDEncryption, HDK_Type__STRUCT__, 0x01 },
-    { /* 121 */ 72, HDK_Element_Cisco_SSIDQoS, HDK_Type__STRUCT__, 0x00 },
-    { /* 122 */ 72, HDK_Element_Cisco_MaxClients, HDK_Type__INT__, 0x00 },
-    { /* 123 */ 72, HDK_Element_Cisco_ACList, HDK_Type__STRUCT__, 0x01 },
-    { /* 124 */ 75, HDK_Element_PN_Name, HDK_Type__STRING__, 0x00 },
-    { /* 125 */ 75, HDK_Element_PN_URL, HDK_Type__STRING__, 0x00 },
-    { /* 126 */ 75, HDK_Element_PN_Type, HDK_Type_PN_TaskExtType, 0x00 },
-    { /* 127 */ 76, HDK_Element_PN_RadioID, HDK_Type__STRING__, 0x00 },
-    { /* 128 */ 76, HDK_Element_PN_Frequency, HDK_Type__INT__, 0x00 },
-    { /* 129 */ 76, HDK_Element_PN_SupportedModes, HDK_Type__STRUCT__, 0x00 },
-    { /* 130 */ 76, HDK_Element_PN_Channels, HDK_Type__STRUCT__, 0x00 },
-    { /* 131 */ 76, HDK_Element_PN_WideChannels, HDK_Type__STRUCT__, 0x00 },
-    { /* 132 */ 76, HDK_Element_PN_SupportedSecurity, HDK_Type__STRUCT__, 0x00 },
-    { /* 133 */ 98, HDK_Element_Cisco_ModeEnabled, HDK_Type_Cisco_WiFiSecurity, 0x00 },
-    { /* 134 */ 98, HDK_Element_Cisco_Encryption, HDK_Type_Cisco_WiFiEncryption, 0x01 },
-    { /* 135 */ 98, HDK_Element_Cisco_WepKey, HDK_Type__STRING__, 0x01 },
-    { /* 136 */ 98, HDK_Element_Cisco_PreSharedKey, HDK_Type__STRING__, 0x01 },
-    { /* 137 */ 98, HDK_Element_Cisco_Passphrase, HDK_Type__STRING__, 0x01 },
-    { /* 138 */ 98, HDK_Element_Cisco_RekeyInterval, HDK_Type__INT__, 0x01 },
-    { /* 139 */ 98, HDK_Element_Cisco_RadiusServerIP, HDK_Type__IPADDRESS__, 0x01 },
-    { /* 140 */ 98, HDK_Element_Cisco_RadiusServerPort, HDK_Type__INT__, 0x01 },
-    { /* 141 */ 98, HDK_Element_Cisco_RadiusSecret, HDK_Type__STRING__, 0x01 },
-    { /* 142 */ 99, HDK_Element_Cisco_WMMEnable, HDK_Type__BOOL__, 0x00 },
-    { /* 143 */ 99, HDK_Element_Cisco_UAPSDEnable, HDK_Type__BOOL__, 0x00 },
-    { /* 144 */ 99, HDK_Element_Cisco_Qos, HDK_Type__STRUCT__, 0x00 },
-    { /* 145 */ 101, HDK_Element_Cisco_FilterType, HDK_Type__STRING__, 0x00 },
-    { /* 146 */ 101, HDK_Element_Cisco_MACList, HDK_Type__STRUCT__, 0x01 },
-    { /* 147 */ 120, HDK_Element_Cisco_ModeEnabled, HDK_Type_Cisco_WiFiSecurity, 0x00 },
-    { /* 148 */ 120, HDK_Element_Cisco_Encryption, HDK_Type_Cisco_WiFiEncryption, 0x01 },
-    { /* 149 */ 120, HDK_Element_Cisco_WepKey, HDK_Type__STRING__, 0x01 },
-    { /* 150 */ 120, HDK_Element_Cisco_PreSharedKey, HDK_Type__STRING__, 0x01 },
-    { /* 151 */ 120, HDK_Element_Cisco_Passphrase, HDK_Type__STRING__, 0x01 },
-    { /* 152 */ 120, HDK_Element_Cisco_RekeyInterval, HDK_Type__INT__, 0x01 },
-    { /* 153 */ 120, HDK_Element_Cisco_RadiusServerIP, HDK_Type__IPADDRESS__, 0x01 },
-    { /* 154 */ 120, HDK_Element_Cisco_RadiusServerPort, HDK_Type__INT__, 0x01 },
-    { /* 155 */ 120, HDK_Element_Cisco_RadiusSecret, HDK_Type__STRING__, 0x01 },
-    { /* 156 */ 121, HDK_Element_Cisco_WMMEnable, HDK_Type__BOOL__, 0x00 },
-    { /* 157 */ 121, HDK_Element_Cisco_UAPSDEnable, HDK_Type__BOOL__, 0x00 },
-    { /* 158 */ 121, HDK_Element_Cisco_Qos, HDK_Type__STRUCT__, 0x00 },
-    { /* 159 */ 123, HDK_Element_Cisco_FilterType, HDK_Type__STRING__, 0x00 },
-    { /* 160 */ 123, HDK_Element_Cisco_MACList, HDK_Type__STRUCT__, 0x01 },
-    { /* 161 */ 129, HDK_Element_PN_string, HDK_Type_PN_WiFiMode, 0x03 },
-    { /* 162 */ 130, HDK_Element_PN_int, HDK_Type__INT__, 0x03 },
-    { /* 163 */ 131, HDK_Element_PN_WideChannel, HDK_Type__STRUCT__, 0x03 },
-    { /* 164 */ 132, HDK_Element_PN_SecurityInfo, HDK_Type__STRUCT__, 0x03 },
-    { /* 165 */ 144, HDK_Element_Cisco_QosSettings, HDK_Type__STRUCT__, 0x03 },
-    { /* 166 */ 146, HDK_Element_Cisco_MACAddress, HDK_Type__MACADDRESS__, 0x03 },
-    { /* 167 */ 158, HDK_Element_Cisco_QosSettings, HDK_Type__STRUCT__, 0x03 },
-    { /* 168 */ 160, HDK_Element_Cisco_MACAddress, HDK_Type__MACADDRESS__, 0x03 },
-    { /* 169 */ 163, HDK_Element_PN_Channel, HDK_Type__INT__, 0x00 },
-    { /* 170 */ 163, HDK_Element_PN_SecondaryChannels, HDK_Type__STRUCT__, 0x00 },
-    { /* 171 */ 164, HDK_Element_PN_SecurityType, HDK_Type_PN_WiFiSecurity, 0x00 },
-    { /* 172 */ 164, HDK_Element_PN_Encryptions, HDK_Type__STRUCT__, 0x00 },
-    { /* 173 */ 165, HDK_Element_Cisco_AC, HDK_Type__INT__, 0x01 },
-    { /* 174 */ 165, HDK_Element_Cisco_ACM, HDK_Type__BOOL__, 0x01 },
-    { /* 175 */ 165, HDK_Element_Cisco_AIFSN, HDK_Type__INT__, 0x01 },
-    { /* 176 */ 165, HDK_Element_Cisco_CWMin, HDK_Type__INT__, 0x01 },
-    { /* 177 */ 165, HDK_Element_Cisco_CWMax, HDK_Type__INT__, 0x01 },
-    { /* 178 */ 165, HDK_Element_Cisco_TXOPLimit, HDK_Type__INT__, 0x01 },
-    { /* 179 */ 165, HDK_Element_Cisco_NoACK, HDK_Type__BOOL__, 0x01 },
-    { /* 180 */ 167, HDK_Element_Cisco_AC, HDK_Type__INT__, 0x01 },
-    { /* 181 */ 167, HDK_Element_Cisco_ACM, HDK_Type__BOOL__, 0x01 },
-    { /* 182 */ 167, HDK_Element_Cisco_AIFSN, HDK_Type__INT__, 0x01 },
-    { /* 183 */ 167, HDK_Element_Cisco_CWMin, HDK_Type__INT__, 0x01 },
-    { /* 184 */ 167, HDK_Element_Cisco_CWMax, HDK_Type__INT__, 0x01 },
-    { /* 185 */ 167, HDK_Element_Cisco_TXOPLimit, HDK_Type__INT__, 0x01 },
-    { /* 186 */ 167, HDK_Element_Cisco_NoACK, HDK_Type__BOOL__, 0x01 },
-    { /* 187 */ 170, HDK_Element_PN_int, HDK_Type__INT__, 0x03 },
-    { /* 188 */ 172, HDK_Element_PN_string, HDK_Type_PN_WiFiEncryption, 0x03 },
+    { /* 8 */ 2, HDK_Element_Cisco_GetLEDStatus, HDK_Type__STRUCT__, 0x00 },
+    { /* 9 */ 2, HDK_Element_Cisco_GetLEDStatusResponse, HDK_Type__STRUCT__, 0x00 },
+    { /* 10 */ 2, HDK_Element_Cisco_SetDoRestart, HDK_Type__STRUCT__, 0x00 },
+    { /* 11 */ 2, HDK_Element_Cisco_SetDoRestartResponse, HDK_Type__STRUCT__, 0x00 },
+    { /* 12 */ 2, HDK_Element_Cisco_SetLEDs, HDK_Type__STRUCT__, 0x00 },
+    { /* 13 */ 2, HDK_Element_Cisco_SetLEDsResponse, HDK_Type__STRUCT__, 0x00 },
+    { /* 14 */ 2, HDK_Element_Cisco_SetRadios, HDK_Type__STRUCT__, 0x00 },
+    { /* 15 */ 2, HDK_Element_Cisco_SetRadiosResponse, HDK_Type__STRUCT__, 0x00 },
+    { /* 16 */ 2, HDK_Element_Cisco_SetSSIDSettings, HDK_Type__STRUCT__, 0x00 },
+    { /* 17 */ 2, HDK_Element_Cisco_SetSSIDSettingsResponse, HDK_Type__STRUCT__, 0x00 },
+    { /* 18 */ 2, HDK_Element_Cisco_SetTOD, HDK_Type__STRUCT__, 0x00 },
+    { /* 19 */ 2, HDK_Element_Cisco_SetTODResponse, HDK_Type__STRUCT__, 0x00 },
+    { /* 20 */ 2, HDK_Element_Cisco_SetWPS, HDK_Type__STRUCT__, 0x00 },
+    { /* 21 */ 2, HDK_Element_Cisco_SetWPSResponse, HDK_Type__STRUCT__, 0x00 },
+    { /* 22 */ 2, HDK_Element_PN_GetDeviceSettings, HDK_Type__STRUCT__, 0x00 },
+    { /* 23 */ 2, HDK_Element_PN_GetDeviceSettingsResponse, HDK_Type__STRUCT__, 0x00 },
+    { /* 24 */ 2, HDK_Element_PN_GetWLanRadios, HDK_Type__STRUCT__, 0x00 },
+    { /* 25 */ 2, HDK_Element_PN_GetWLanRadiosResponse, HDK_Type__STRUCT__, 0x00 },
+    { /* 26 */ 2, HDK_Element_PN_IsDeviceReady, HDK_Type__STRUCT__, 0x00 },
+    { /* 27 */ 2, HDK_Element_PN_IsDeviceReadyResponse, HDK_Type__STRUCT__, 0x00 },
+    { /* 28 */ 3, HDK_Element_faultcode, HDK_Type__STRING__, 0x00 },
+    { /* 29 */ 3, HDK_Element_faultstring, HDK_Type__STRING__, 0x00 },
+    { /* 30 */ 3, HDK_Element_faultactor, HDK_Type__STRING__, 0x01 },
+    { /* 31 */ 3, HDK_Element_detail, HDK_Type__STRING__, 0x01 },
+    { /* 32 */ 5, HDK_Element_Cisco_GetClientInfoResult, HDK_Type__RESULT__, 0x00 },
+    { /* 33 */ 5, HDK_Element_Cisco_ClientInfoLists, HDK_Type__STRUCT__, 0x00 },
+    { /* 34 */ 7, HDK_Element_Cisco_GetExtenderStatusResult, HDK_Type__RESULT__, 0x00 },
+    { /* 35 */ 7, HDK_Element_Cisco_ExtenderState, HDK_Type__INT__, 0x00 },
+    { /* 36 */ 7, HDK_Element_Cisco_RadioList, HDK_Type__STRUCT__, 0x00 },
+    { /* 37 */ 7, HDK_Element_Cisco_SSIDList, HDK_Type__STRUCT__, 0x00 },
+    { /* 38 */ 9, HDK_Element_Cisco_GetLEDStatusResult, HDK_Type__RESULT__, 0x00 },
+    { /* 39 */ 9, HDK_Element_Cisco_LEDList, HDK_Type__STRUCT__, 0x00 },
+    { /* 40 */ 11, HDK_Element_Cisco_SetDoRestartResult, HDK_Type__RESULT__, 0x00 },
+    { /* 41 */ 12, HDK_Element_Cisco_LEDList, HDK_Type__STRUCT__, 0x00 },
+    { /* 42 */ 13, HDK_Element_Cisco_SetLEDsResult, HDK_Type__RESULT__, 0x00 },
+    { /* 43 */ 14, HDK_Element_Cisco_RadioList, HDK_Type__STRUCT__, 0x00 },
+    { /* 44 */ 15, HDK_Element_Cisco_SetRadiosResult, HDK_Type__RESULT__, 0x00 },
+    { /* 45 */ 16, HDK_Element_Cisco_SSIDList, HDK_Type__STRUCT__, 0x00 },
+    { /* 46 */ 17, HDK_Element_Cisco_SetSSIDSettingsResult, HDK_Type__RESULT__, 0x00 },
+    { /* 47 */ 18, HDK_Element_Cisco_Seconds, HDK_Type__INT__, 0x00 },
+    { /* 48 */ 18, HDK_Element_Cisco_Minutes, HDK_Type__INT__, 0x00 },
+    { /* 49 */ 18, HDK_Element_Cisco_Hour, HDK_Type__INT__, 0x00 },
+    { /* 50 */ 18, HDK_Element_Cisco_MonthDay, HDK_Type__INT__, 0x00 },
+    { /* 51 */ 18, HDK_Element_Cisco_Month, HDK_Type__INT__, 0x00 },
+    { /* 52 */ 18, HDK_Element_Cisco_Year, HDK_Type__INT__, 0x00 },
+    { /* 53 */ 18, HDK_Element_Cisco_WDay, HDK_Type__INT__, 0x00 },
+    { /* 54 */ 18, HDK_Element_Cisco_YDay, HDK_Type__INT__, 0x00 },
+    { /* 55 */ 18, HDK_Element_Cisco_Dst, HDK_Type__BOOL__, 0x00 },
+    { /* 56 */ 18, HDK_Element_Cisco_Epoch, HDK_Type__INT__, 0x00 },
+    { /* 57 */ 19, HDK_Element_Cisco_SetTODResult, HDK_Type__RESULT__, 0x00 },
+    { /* 58 */ 20, HDK_Element_Cisco_WPSEnable, HDK_Type__BOOL__, 0x00 },
+    { /* 59 */ 20, HDK_Element_Cisco_PINCode, HDK_Type__STRING__, 0x00 },
+    { /* 60 */ 20, HDK_Element_Cisco_SSIDIndex, HDK_Type__STRING__, 0x00 },
+    { /* 61 */ 21, HDK_Element_Cisco_SetWPSResult, HDK_Type__RESULT__, 0x00 },
+    { /* 62 */ 23, HDK_Element_PN_GetDeviceSettingsResult, HDK_Type__RESULT__, 0x00 },
+    { /* 63 */ 23, HDK_Element_PN_Type, HDK_Type_PN_DeviceType, 0x00 },
+    { /* 64 */ 23, HDK_Element_PN_DeviceName, HDK_Type__STRING__, 0x00 },
+    { /* 65 */ 23, HDK_Element_PN_VendorName, HDK_Type__STRING__, 0x00 },
+    { /* 66 */ 23, HDK_Element_PN_ModelDescription, HDK_Type__STRING__, 0x00 },
+    { /* 67 */ 23, HDK_Element_PN_ModelName, HDK_Type__STRING__, 0x00 },
+    { /* 68 */ 23, HDK_Element_PN_FirmwareVersion, HDK_Type__STRING__, 0x00 },
+    { /* 69 */ 23, HDK_Element_PN_PresentationURL, HDK_Type__STRING__, 0x00 },
+    { /* 70 */ 23, HDK_Element_PN_SOAPActions, HDK_Type__STRUCT__, 0x00 },
+    { /* 71 */ 23, HDK_Element_PN_SubDeviceURLs, HDK_Type__STRUCT__, 0x00 },
+    { /* 72 */ 23, HDK_Element_PN_Tasks, HDK_Type__STRUCT__, 0x00 },
+    { /* 73 */ 25, HDK_Element_PN_GetWLanRadiosResult, HDK_Type__RESULT__, 0x00 },
+    { /* 74 */ 25, HDK_Element_PN_RadioInfos, HDK_Type__STRUCT__, 0x00 },
+    { /* 75 */ 27, HDK_Element_PN_IsDeviceReadyResult, HDK_Type__RESULT__, 0x00 },
+    { /* 76 */ 33, HDK_Element_Cisco_ClientInfo, HDK_Type__STRUCT__, 0x03 },
+    { /* 77 */ 36, HDK_Element_Cisco_RadioSettings, HDK_Type__STRUCT__, 0x03 },
+    { /* 78 */ 37, HDK_Element_Cisco_SSIDSettings, HDK_Type__STRUCT__, 0x03 },
+    { /* 79 */ 39, HDK_Element_Cisco_LEDSettings, HDK_Type__STRUCT__, 0x00 },
+    { /* 80 */ 41, HDK_Element_Cisco_LEDSettings, HDK_Type__STRUCT__, 0x00 },
+    { /* 81 */ 43, HDK_Element_Cisco_RadioSettings, HDK_Type__STRUCT__, 0x03 },
+    { /* 82 */ 45, HDK_Element_Cisco_SSIDSettings, HDK_Type__STRUCT__, 0x03 },
+    { /* 83 */ 70, HDK_Element_PN_string, HDK_Type__STRING__, 0x03 },
+    { /* 84 */ 71, HDK_Element_PN_string, HDK_Type__STRING__, 0x03 },
+    { /* 85 */ 72, HDK_Element_PN_TaskExtension, HDK_Type__STRUCT__, 0x03 },
+    { /* 86 */ 74, HDK_Element_PN_RadioInfo, HDK_Type__STRUCT__, 0x03 },
+    { /* 87 */ 76, HDK_Element_Cisco_MACAddress, HDK_Type__MACADDRESS__, 0x00 },
+    { /* 88 */ 76, HDK_Element_Cisco_Type, HDK_Type_Cisco_DeviceInf, 0x00 },
+    { /* 89 */ 76, HDK_Element_Cisco_DeviceName, HDK_Type__STRING__, 0x01 },
+    { /* 90 */ 77, HDK_Element_Cisco_RadioID, HDK_Type__STRING__, 0x00 },
+    { /* 91 */ 77, HDK_Element_Cisco_Enable, HDK_Type__BOOL__, 0x00 },
+    { /* 92 */ 77, HDK_Element_Cisco_Mode, HDK_Type_Cisco_WiFiMode, 0x00 },
+    { /* 93 */ 77, HDK_Element_Cisco_ChannelWidth, HDK_Type__INT__, 0x00 },
+    { /* 94 */ 77, HDK_Element_Cisco_Channel, HDK_Type__INT__, 0x00 },
+    { /* 95 */ 77, HDK_Element_Cisco_SecondaryChannel, HDK_Type__INT__, 0x00 },
+    { /* 96 */ 77, HDK_Element_Cisco_BeaconInterval, HDK_Type__INT__, 0x00 },
+    { /* 97 */ 77, HDK_Element_Cisco_DTIMInterval, HDK_Type__INT__, 0x00 },
+    { /* 98 */ 77, HDK_Element_Cisco_GuardInterval, HDK_Type__INT__, 0x00 },
+    { /* 99 */ 77, HDK_Element_Cisco_Coexistance, HDK_Type__BOOL__, 0x00 },
+    { /* 100 */ 78, HDK_Element_Cisco_SSIDRadioID, HDK_Type__STRING__, 0x00 },
+    { /* 101 */ 78, HDK_Element_Cisco_SSIDIndex, HDK_Type__STRING__, 0x00 },
+    { /* 102 */ 78, HDK_Element_Cisco_SSID, HDK_Type__STRING__, 0x00 },
+    { /* 103 */ 78, HDK_Element_Cisco_BSSID, HDK_Type__STRING__, 0x01 },
+    { /* 104 */ 78, HDK_Element_Cisco_SSIDEnabled, HDK_Type__BOOL__, 0x00 },
+    { /* 105 */ 78, HDK_Element_Cisco_SSIDBroadcast, HDK_Type__BOOL__, 0x00 },
+    { /* 106 */ 78, HDK_Element_Cisco_SSIDVlanID, HDK_Type__INT__, 0x00 },
+    { /* 107 */ 78, HDK_Element_Cisco_SSIDLanBase, HDK_Type__IPADDRESS__, 0x00 },
+    { /* 108 */ 78, HDK_Element_Cisco_SSIDEncryption, HDK_Type__STRUCT__, 0x01 },
+    { /* 109 */ 78, HDK_Element_Cisco_SSIDQoS, HDK_Type__STRUCT__, 0x00 },
+    { /* 110 */ 78, HDK_Element_Cisco_MaxClients, HDK_Type__INT__, 0x00 },
+    { /* 111 */ 78, HDK_Element_Cisco_ACList, HDK_Type__STRUCT__, 0x01 },
+    { /* 112 */ 79, HDK_Element_Cisco_Mode, HDK_Type_Cisco_LEDMode, 0x00 },
+    { /* 113 */ 79, HDK_Element_Cisco_Type, HDK_Type_Cisco_LEDType, 0x00 },
+    { /* 114 */ 80, HDK_Element_Cisco_Mode, HDK_Type_Cisco_LEDMode, 0x00 },
+    { /* 115 */ 80, HDK_Element_Cisco_Type, HDK_Type_Cisco_LEDType, 0x00 },
+    { /* 116 */ 81, HDK_Element_Cisco_RadioID, HDK_Type__STRING__, 0x00 },
+    { /* 117 */ 81, HDK_Element_Cisco_Enable, HDK_Type__BOOL__, 0x00 },
+    { /* 118 */ 81, HDK_Element_Cisco_Mode, HDK_Type_Cisco_WiFiMode, 0x00 },
+    { /* 119 */ 81, HDK_Element_Cisco_ChannelWidth, HDK_Type__INT__, 0x00 },
+    { /* 120 */ 81, HDK_Element_Cisco_Channel, HDK_Type__INT__, 0x00 },
+    { /* 121 */ 81, HDK_Element_Cisco_SecondaryChannel, HDK_Type__INT__, 0x00 },
+    { /* 122 */ 81, HDK_Element_Cisco_BeaconInterval, HDK_Type__INT__, 0x00 },
+    { /* 123 */ 81, HDK_Element_Cisco_DTIMInterval, HDK_Type__INT__, 0x00 },
+    { /* 124 */ 81, HDK_Element_Cisco_GuardInterval, HDK_Type__INT__, 0x00 },
+    { /* 125 */ 81, HDK_Element_Cisco_Coexistance, HDK_Type__BOOL__, 0x00 },
+    { /* 126 */ 82, HDK_Element_Cisco_SSIDRadioID, HDK_Type__STRING__, 0x00 },
+    { /* 127 */ 82, HDK_Element_Cisco_SSIDIndex, HDK_Type__STRING__, 0x00 },
+    { /* 128 */ 82, HDK_Element_Cisco_SSID, HDK_Type__STRING__, 0x00 },
+    { /* 129 */ 82, HDK_Element_Cisco_BSSID, HDK_Type__STRING__, 0x01 },
+    { /* 130 */ 82, HDK_Element_Cisco_SSIDEnabled, HDK_Type__BOOL__, 0x00 },
+    { /* 131 */ 82, HDK_Element_Cisco_SSIDBroadcast, HDK_Type__BOOL__, 0x00 },
+    { /* 132 */ 82, HDK_Element_Cisco_SSIDVlanID, HDK_Type__INT__, 0x00 },
+    { /* 133 */ 82, HDK_Element_Cisco_SSIDLanBase, HDK_Type__IPADDRESS__, 0x00 },
+    { /* 134 */ 82, HDK_Element_Cisco_SSIDEncryption, HDK_Type__STRUCT__, 0x01 },
+    { /* 135 */ 82, HDK_Element_Cisco_SSIDQoS, HDK_Type__STRUCT__, 0x00 },
+    { /* 136 */ 82, HDK_Element_Cisco_MaxClients, HDK_Type__INT__, 0x00 },
+    { /* 137 */ 82, HDK_Element_Cisco_ACList, HDK_Type__STRUCT__, 0x01 },
+    { /* 138 */ 85, HDK_Element_PN_Name, HDK_Type__STRING__, 0x00 },
+    { /* 139 */ 85, HDK_Element_PN_URL, HDK_Type__STRING__, 0x00 },
+    { /* 140 */ 85, HDK_Element_PN_Type, HDK_Type_PN_TaskExtType, 0x00 },
+    { /* 141 */ 86, HDK_Element_PN_RadioID, HDK_Type__STRING__, 0x00 },
+    { /* 142 */ 86, HDK_Element_PN_Frequency, HDK_Type__INT__, 0x00 },
+    { /* 143 */ 86, HDK_Element_PN_SupportedModes, HDK_Type__STRUCT__, 0x00 },
+    { /* 144 */ 86, HDK_Element_PN_Channels, HDK_Type__STRUCT__, 0x00 },
+    { /* 145 */ 86, HDK_Element_PN_WideChannels, HDK_Type__STRUCT__, 0x00 },
+    { /* 146 */ 86, HDK_Element_PN_SupportedSecurity, HDK_Type__STRUCT__, 0x00 },
+    { /* 147 */ 108, HDK_Element_Cisco_ModeEnabled, HDK_Type_Cisco_WiFiSecurity, 0x00 },
+    { /* 148 */ 108, HDK_Element_Cisco_Encryption, HDK_Type_Cisco_WiFiEncryption, 0x01 },
+    { /* 149 */ 108, HDK_Element_Cisco_WepKey, HDK_Type__STRING__, 0x01 },
+    { /* 150 */ 108, HDK_Element_Cisco_PreSharedKey, HDK_Type__STRING__, 0x01 },
+    { /* 151 */ 108, HDK_Element_Cisco_Passphrase, HDK_Type__STRING__, 0x01 },
+    { /* 152 */ 108, HDK_Element_Cisco_RekeyInterval, HDK_Type__INT__, 0x01 },
+    { /* 153 */ 108, HDK_Element_Cisco_RadiusServerIP, HDK_Type__IPADDRESS__, 0x01 },
+    { /* 154 */ 108, HDK_Element_Cisco_RadiusServerPort, HDK_Type__INT__, 0x01 },
+    { /* 155 */ 108, HDK_Element_Cisco_RadiusSecret, HDK_Type__STRING__, 0x01 },
+    { /* 156 */ 109, HDK_Element_Cisco_WMMEnable, HDK_Type__BOOL__, 0x00 },
+    { /* 157 */ 109, HDK_Element_Cisco_UAPSDEnable, HDK_Type__BOOL__, 0x00 },
+    { /* 158 */ 109, HDK_Element_Cisco_Qos, HDK_Type__STRUCT__, 0x00 },
+    { /* 159 */ 111, HDK_Element_Cisco_FilterType, HDK_Type__STRING__, 0x00 },
+    { /* 160 */ 111, HDK_Element_Cisco_MACList, HDK_Type__STRUCT__, 0x01 },
+    { /* 161 */ 134, HDK_Element_Cisco_ModeEnabled, HDK_Type_Cisco_WiFiSecurity, 0x00 },
+    { /* 162 */ 134, HDK_Element_Cisco_Encryption, HDK_Type_Cisco_WiFiEncryption, 0x01 },
+    { /* 163 */ 134, HDK_Element_Cisco_WepKey, HDK_Type__STRING__, 0x01 },
+    { /* 164 */ 134, HDK_Element_Cisco_PreSharedKey, HDK_Type__STRING__, 0x01 },
+    { /* 165 */ 134, HDK_Element_Cisco_Passphrase, HDK_Type__STRING__, 0x01 },
+    { /* 166 */ 134, HDK_Element_Cisco_RekeyInterval, HDK_Type__INT__, 0x01 },
+    { /* 167 */ 134, HDK_Element_Cisco_RadiusServerIP, HDK_Type__IPADDRESS__, 0x01 },
+    { /* 168 */ 134, HDK_Element_Cisco_RadiusServerPort, HDK_Type__INT__, 0x01 },
+    { /* 169 */ 134, HDK_Element_Cisco_RadiusSecret, HDK_Type__STRING__, 0x01 },
+    { /* 170 */ 135, HDK_Element_Cisco_WMMEnable, HDK_Type__BOOL__, 0x00 },
+    { /* 171 */ 135, HDK_Element_Cisco_UAPSDEnable, HDK_Type__BOOL__, 0x00 },
+    { /* 172 */ 135, HDK_Element_Cisco_Qos, HDK_Type__STRUCT__, 0x00 },
+    { /* 173 */ 137, HDK_Element_Cisco_FilterType, HDK_Type__STRING__, 0x00 },
+    { /* 174 */ 137, HDK_Element_Cisco_MACList, HDK_Type__STRUCT__, 0x01 },
+    { /* 175 */ 143, HDK_Element_PN_string, HDK_Type_PN_WiFiMode, 0x03 },
+    { /* 176 */ 144, HDK_Element_PN_int, HDK_Type__INT__, 0x03 },
+    { /* 177 */ 145, HDK_Element_PN_WideChannel, HDK_Type__STRUCT__, 0x03 },
+    { /* 178 */ 146, HDK_Element_PN_SecurityInfo, HDK_Type__STRUCT__, 0x03 },
+    { /* 179 */ 158, HDK_Element_Cisco_QosSettings, HDK_Type__STRUCT__, 0x03 },
+    { /* 180 */ 160, HDK_Element_Cisco_MACAddress, HDK_Type__MACADDRESS__, 0x03 },
+    { /* 181 */ 172, HDK_Element_Cisco_QosSettings, HDK_Type__STRUCT__, 0x03 },
+    { /* 182 */ 174, HDK_Element_Cisco_MACAddress, HDK_Type__MACADDRESS__, 0x03 },
+    { /* 183 */ 177, HDK_Element_PN_Channel, HDK_Type__INT__, 0x00 },
+    { /* 184 */ 177, HDK_Element_PN_SecondaryChannels, HDK_Type__STRUCT__, 0x00 },
+    { /* 185 */ 178, HDK_Element_PN_SecurityType, HDK_Type_PN_WiFiSecurity, 0x00 },
+    { /* 186 */ 178, HDK_Element_PN_Encryptions, HDK_Type__STRUCT__, 0x00 },
+    { /* 187 */ 179, HDK_Element_Cisco_AC, HDK_Type__INT__, 0x01 },
+    { /* 188 */ 179, HDK_Element_Cisco_ACM, HDK_Type__BOOL__, 0x01 },
+    { /* 189 */ 179, HDK_Element_Cisco_AIFSN, HDK_Type__INT__, 0x01 },
+    { /* 190 */ 179, HDK_Element_Cisco_CWMin, HDK_Type__INT__, 0x01 },
+    { /* 191 */ 179, HDK_Element_Cisco_CWMax, HDK_Type__INT__, 0x01 },
+    { /* 192 */ 179, HDK_Element_Cisco_TXOPLimit, HDK_Type__INT__, 0x01 },
+    { /* 193 */ 179, HDK_Element_Cisco_NoACK, HDK_Type__BOOL__, 0x01 },
+    { /* 194 */ 181, HDK_Element_Cisco_AC, HDK_Type__INT__, 0x01 },
+    { /* 195 */ 181, HDK_Element_Cisco_ACM, HDK_Type__BOOL__, 0x01 },
+    { /* 196 */ 181, HDK_Element_Cisco_AIFSN, HDK_Type__INT__, 0x01 },
+    { /* 197 */ 181, HDK_Element_Cisco_CWMin, HDK_Type__INT__, 0x01 },
+    { /* 198 */ 181, HDK_Element_Cisco_CWMax, HDK_Type__INT__, 0x01 },
+    { /* 199 */ 181, HDK_Element_Cisco_TXOPLimit, HDK_Type__INT__, 0x01 },
+    { /* 200 */ 181, HDK_Element_Cisco_NoACK, HDK_Type__BOOL__, 0x01 },
+    { /* 201 */ 184, HDK_Element_PN_int, HDK_Type__INT__, 0x03 },
+    { /* 202 */ 186, HDK_Element_PN_string, HDK_Type_PN_WiFiEncryption, 0x03 },
 };
 
 #define s_elementTree_GetNode(ixNode) \
@@ -869,6 +891,34 @@ HDK_Member* HDK_Copy_Member(HDK_Struct* pStructDst, HDK_Element elementDst,
                 else
                 {
                     pMemberDst = HDK_Append_Cisco_WiFiSecurity(pStructDst, elementDst, eValue);
+                }
+            }
+            break;
+
+        case HDK_Type_Cisco_LEDMode:
+            {
+                HDK_Enum_Cisco_LEDMode eValue = *HDK_Get_Cisco_LEDModeMember(pMemberSrc);
+                if (!fAppend)
+                {
+                    pMemberDst = HDK_Set_Cisco_LEDMode(pStructDst, elementDst, eValue);
+                }
+                else
+                {
+                    pMemberDst = HDK_Append_Cisco_LEDMode(pStructDst, elementDst, eValue);
+                }
+            }
+            break;
+
+        case HDK_Type_Cisco_LEDType:
+            {
+                HDK_Enum_Cisco_LEDType eValue = *HDK_Get_Cisco_LEDTypeMember(pMemberSrc);
+                if (!fAppend)
+                {
+                    pMemberDst = HDK_Set_Cisco_LEDType(pStructDst, elementDst, eValue);
+                }
+                else
+                {
+                    pMemberDst = HDK_Append_Cisco_LEDType(pStructDst, elementDst, eValue);
                 }
             }
             break;
@@ -2093,6 +2143,163 @@ HDK_Enum_Cisco_WiFiSecurity HDK_Get_Cisco_WiFiSecurityEx(HDK_Struct* pStruct, HD
 HDK_Enum_Cisco_WiFiSecurity* HDK_Get_Cisco_WiFiSecurityMember(HDK_Member* pMember)
 {
     return (HDK_Enum_Cisco_WiFiSecurity*)(pMember && pMember->type == HDK_Type_Cisco_WiFiSecurity ? &((HDK_Member__INT__*)pMember)->iValue : 0);
+}
+
+
+/*
+ * HDK_Type_Cisco_LEDMode enumeration type
+ */
+
+static char* s_HDK_Enum_Cisco_LEDMode__VALUESTRINGS__[] =
+{
+    /* HDK_Enum_Cisco_LEDMode__UNKNOWN__ */ 0,
+    /* HDK_Enum_Cisco_LEDMode_ON */ "ON",
+    /* HDK_Enum_Cisco_LEDMode_OFF */ "OFF",
+    /* HDK_Enum_Cisco_LEDMode_ */ "",
+};
+
+static HDK_Member* HDK_Type_Cisco_LEDMode__NEW__(void)
+{
+    return HDK_Type__INT__NEW__();
+}
+
+static void HDK_Type_Cisco_LEDMode__FREE__(HDK_Member* pMember)
+{
+    HDK_Type__INT__FREE__(pMember);
+}
+
+static int HDK_Type_Cisco_LEDMode__DESERIALIZE__(HDK_Member* pMember, char* pszValue)
+{
+    char** ppszBegin = s_HDK_Enum_Cisco_LEDMode__VALUESTRINGS__;
+    char** ppszEnd = s_HDK_Enum_Cisco_LEDMode__VALUESTRINGS__ + sizeof(s_HDK_Enum_Cisco_LEDMode__VALUESTRINGS__) / sizeof(*s_HDK_Enum_Cisco_LEDMode__VALUESTRINGS__);
+    return HDK_Type__ENUM__DESERIALIZE__(pMember, pszValue, ppszBegin, ppszEnd);
+}
+
+static int HDK_Type_Cisco_LEDMode__SERIALIZE__(void* pDeviceCtx, HDK_WriteFn pfnWrite, int fNoWrite, HDK_Member* pMember)
+{
+    char** ppszBegin = s_HDK_Enum_Cisco_LEDMode__VALUESTRINGS__;
+    char** ppszEnd = s_HDK_Enum_Cisco_LEDMode__VALUESTRINGS__ + sizeof(s_HDK_Enum_Cisco_LEDMode__VALUESTRINGS__) / sizeof(*s_HDK_Enum_Cisco_LEDMode__VALUESTRINGS__);
+    return HDK_Type__ENUM__SERIALIZE__(pDeviceCtx, pfnWrite, fNoWrite, pMember, ppszBegin, ppszEnd);
+}
+
+HDK_Member* HDK_Set_Cisco_LEDMode(HDK_Struct* pStruct, HDK_Element element, HDK_Enum_Cisco_LEDMode eValue)
+{
+    if (eValue != HDK_Enum_Cisco_LEDMode__UNKNOWN__)
+    {
+        return HDK_Set_IntHelper(pStruct, element, HDK_Type_Cisco_LEDMode, eValue);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+HDK_Member* HDK_Append_Cisco_LEDMode(HDK_Struct* pStruct, HDK_Element element, HDK_Enum_Cisco_LEDMode eValue)
+{
+    if (eValue != HDK_Enum_Cisco_LEDMode__UNKNOWN__)
+    {
+        return HDK_Append_IntHelper(pStruct, element, HDK_Type_Cisco_LEDMode, eValue);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+HDK_Enum_Cisco_LEDMode* HDK_Get_Cisco_LEDMode(HDK_Struct* pStruct, HDK_Element element)
+{
+    return HDK_Get_Cisco_LEDModeMember(HDK_Get_Member(pStruct, element, HDK_Type_Cisco_LEDMode));
+}
+
+HDK_Enum_Cisco_LEDMode HDK_Get_Cisco_LEDModeEx(HDK_Struct* pStruct, HDK_Element element, HDK_Enum_Cisco_LEDMode eValue)
+{
+    HDK_Enum_Cisco_LEDMode* peDefault = HDK_Get_Cisco_LEDMode(pStruct, element);
+    return (peDefault ? *peDefault : eValue);
+}
+
+HDK_Enum_Cisco_LEDMode* HDK_Get_Cisco_LEDModeMember(HDK_Member* pMember)
+{
+    return (HDK_Enum_Cisco_LEDMode*)(pMember && pMember->type == HDK_Type_Cisco_LEDMode ? &((HDK_Member__INT__*)pMember)->iValue : 0);
+}
+
+
+/*
+ * HDK_Type_Cisco_LEDType enumeration type
+ */
+
+static char* s_HDK_Enum_Cisco_LEDType__VALUESTRINGS__[] =
+{
+    /* HDK_Enum_Cisco_LEDType__UNKNOWN__ */ 0,
+    /* HDK_Enum_Cisco_LEDType_Main */ "Main",
+    /* HDK_Enum_Cisco_LEDType_Eth */ "Eth",
+    /* HDK_Enum_Cisco_LEDType_WiFi_2_4G */ "WiFi_2.4G",
+    /* HDK_Enum_Cisco_LEDType_WiFi_5_0G */ "WiFi_5.0G",
+    /* HDK_Enum_Cisco_LEDType_MoCA */ "MoCA",
+    /* HDK_Enum_Cisco_LEDType_ */ "",
+};
+
+static HDK_Member* HDK_Type_Cisco_LEDType__NEW__(void)
+{
+    return HDK_Type__INT__NEW__();
+}
+
+static void HDK_Type_Cisco_LEDType__FREE__(HDK_Member* pMember)
+{
+    HDK_Type__INT__FREE__(pMember);
+}
+
+static int HDK_Type_Cisco_LEDType__DESERIALIZE__(HDK_Member* pMember, char* pszValue)
+{
+    char** ppszBegin = s_HDK_Enum_Cisco_LEDType__VALUESTRINGS__;
+    char** ppszEnd = s_HDK_Enum_Cisco_LEDType__VALUESTRINGS__ + sizeof(s_HDK_Enum_Cisco_LEDType__VALUESTRINGS__) / sizeof(*s_HDK_Enum_Cisco_LEDType__VALUESTRINGS__);
+    return HDK_Type__ENUM__DESERIALIZE__(pMember, pszValue, ppszBegin, ppszEnd);
+}
+
+static int HDK_Type_Cisco_LEDType__SERIALIZE__(void* pDeviceCtx, HDK_WriteFn pfnWrite, int fNoWrite, HDK_Member* pMember)
+{
+    char** ppszBegin = s_HDK_Enum_Cisco_LEDType__VALUESTRINGS__;
+    char** ppszEnd = s_HDK_Enum_Cisco_LEDType__VALUESTRINGS__ + sizeof(s_HDK_Enum_Cisco_LEDType__VALUESTRINGS__) / sizeof(*s_HDK_Enum_Cisco_LEDType__VALUESTRINGS__);
+    return HDK_Type__ENUM__SERIALIZE__(pDeviceCtx, pfnWrite, fNoWrite, pMember, ppszBegin, ppszEnd);
+}
+
+HDK_Member* HDK_Set_Cisco_LEDType(HDK_Struct* pStruct, HDK_Element element, HDK_Enum_Cisco_LEDType eValue)
+{
+    if (eValue != HDK_Enum_Cisco_LEDType__UNKNOWN__)
+    {
+        return HDK_Set_IntHelper(pStruct, element, HDK_Type_Cisco_LEDType, eValue);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+HDK_Member* HDK_Append_Cisco_LEDType(HDK_Struct* pStruct, HDK_Element element, HDK_Enum_Cisco_LEDType eValue)
+{
+    if (eValue != HDK_Enum_Cisco_LEDType__UNKNOWN__)
+    {
+        return HDK_Append_IntHelper(pStruct, element, HDK_Type_Cisco_LEDType, eValue);
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+HDK_Enum_Cisco_LEDType* HDK_Get_Cisco_LEDType(HDK_Struct* pStruct, HDK_Element element)
+{
+    return HDK_Get_Cisco_LEDTypeMember(HDK_Get_Member(pStruct, element, HDK_Type_Cisco_LEDType));
+}
+
+HDK_Enum_Cisco_LEDType HDK_Get_Cisco_LEDTypeEx(HDK_Struct* pStruct, HDK_Element element, HDK_Enum_Cisco_LEDType eValue)
+{
+    HDK_Enum_Cisco_LEDType* peDefault = HDK_Get_Cisco_LEDType(pStruct, element);
+    return (peDefault ? *peDefault : eValue);
+}
+
+HDK_Enum_Cisco_LEDType* HDK_Get_Cisco_LEDTypeMember(HDK_Member* pMember)
+{
+    return (HDK_Enum_Cisco_LEDType*)(pMember && pMember->type == HDK_Type_Cisco_LEDType ? &((HDK_Member__INT__*)pMember)->iValue : 0);
 }
 
 

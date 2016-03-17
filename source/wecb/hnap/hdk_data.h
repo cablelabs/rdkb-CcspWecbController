@@ -98,8 +98,13 @@ typedef enum _HDK_Element
     HDK_Element_Cisco_GetExtenderStatus,
     HDK_Element_Cisco_GetExtenderStatusResponse,
     HDK_Element_Cisco_GetExtenderStatusResult,
+    HDK_Element_Cisco_GetLEDStatus,
+    HDK_Element_Cisco_GetLEDStatusResponse,
+    HDK_Element_Cisco_GetLEDStatusResult,
     HDK_Element_Cisco_GuardInterval,
     HDK_Element_Cisco_Hour,
+    HDK_Element_Cisco_LEDList,
+    HDK_Element_Cisco_LEDSettings,
     HDK_Element_Cisco_MACAddress,
     HDK_Element_Cisco_MACList,
     HDK_Element_Cisco_MaxClients,
@@ -137,6 +142,9 @@ typedef enum _HDK_Element
     HDK_Element_Cisco_SetDoRestart,
     HDK_Element_Cisco_SetDoRestartResponse,
     HDK_Element_Cisco_SetDoRestartResult,
+    HDK_Element_Cisco_SetLEDs,
+    HDK_Element_Cisco_SetLEDsResponse,
+    HDK_Element_Cisco_SetLEDsResult,
     HDK_Element_Cisco_SetRadios,
     HDK_Element_Cisco_SetRadiosResponse,
     HDK_Element_Cisco_SetRadiosResult,
@@ -212,6 +220,8 @@ extern int HDK_ExpandElementURI(HDK_Element element, char* pszURI, unsigned int 
 #define HDK_TYPE_CISCO_WIFIENCRYPTION
 #define HDK_TYPE_CISCO_WIFIMODE
 #define HDK_TYPE_CISCO_WIFISECURITY
+#define HDK_TYPE_CISCO_LEDMODE
+#define HDK_TYPE_CISCO_LEDTYPE
 #define HDK_TYPE_PN_DEVICETYPE
 #define HDK_TYPE_PN_TASKEXTTYPE
 #define HDK_TYPE_PN_WIFIENCRYPTION
@@ -235,6 +245,8 @@ typedef enum _HDK_Type
     HDK_Type_Cisco_WiFiEncryption,
     HDK_Type_Cisco_WiFiMode,
     HDK_Type_Cisco_WiFiSecurity,
+    HDK_Type_Cisco_LEDMode,
+    HDK_Type_Cisco_LEDType,
     HDK_Type_PN_DeviceType,
     HDK_Type_PN_TaskExtType,
     HDK_Type_PN_WiFiEncryption,
@@ -454,6 +466,39 @@ extern HDK_Member* HDK_Append_Cisco_WiFiSecurity(HDK_Struct* pStruct, HDK_Elemen
 extern HDK_Enum_Cisco_WiFiSecurity* HDK_Get_Cisco_WiFiSecurity(HDK_Struct* pStruct, HDK_Element element);
 extern HDK_Enum_Cisco_WiFiSecurity HDK_Get_Cisco_WiFiSecurityEx(HDK_Struct* pStruct, HDK_Element element, HDK_Enum_Cisco_WiFiSecurity eDefault);
 extern HDK_Enum_Cisco_WiFiSecurity* HDK_Get_Cisco_WiFiSecurityMember(HDK_Member* pMember);
+
+/* HDK_Type_Cisco_LEDMode enumeration type */
+typedef enum _HDK_Enum_Cisco_LEDMode
+{
+    HDK_Enum_Cisco_LEDMode__UNKNOWN__ = 0,
+    HDK_Enum_Cisco_LEDMode_ON,
+    HDK_Enum_Cisco_LEDMode_OFF,
+    HDK_Enum_Cisco_LEDMode_
+} HDK_Enum_Cisco_LEDMode;
+
+extern HDK_Member* HDK_Set_Cisco_LEDMode(HDK_Struct* pStruct, HDK_Element element, HDK_Enum_Cisco_LEDMode eValue);
+extern HDK_Member* HDK_Append_Cisco_LEDMode(HDK_Struct* pStruct, HDK_Element element, HDK_Enum_Cisco_LEDMode eValue);
+extern HDK_Enum_Cisco_LEDMode* HDK_Get_Cisco_LEDMode(HDK_Struct* pStruct, HDK_Element element);
+extern HDK_Enum_Cisco_LEDMode HDK_Get_Cisco_LEDModeEx(HDK_Struct* pStruct, HDK_Element element, HDK_Enum_Cisco_LEDMode eValue);
+extern HDK_Enum_Cisco_LEDMode* HDK_Get_Cisco_LEDModeMember(HDK_Member* pMember);
+
+/* HDK_Type_Cisco_LEDType enumeration type */
+typedef enum _HDK_Enum_Cisco_LEDType
+{
+    HDK_Enum_Cisco_LEDType__UNKNOWN__ = 0,
+    HDK_Enum_Cisco_LEDType_Main,
+    HDK_Enum_Cisco_LEDType_Eth,
+    HDK_Enum_Cisco_LEDType_WiFi_2_4G,
+    HDK_Enum_Cisco_LEDType_WiFi_5_0G,
+    HDK_Enum_Cisco_LEDType_MoCA,
+    HDK_Enum_Cisco_LEDType_
+} HDK_Enum_Cisco_LEDType;
+
+extern HDK_Member* HDK_Set_Cisco_LEDType(HDK_Struct* pStruct, HDK_Element element, HDK_Enum_Cisco_LEDType eValue);
+extern HDK_Member* HDK_Append_Cisco_LEDType(HDK_Struct* pStruct, HDK_Element element, HDK_Enum_Cisco_LEDType eValue);
+extern HDK_Enum_Cisco_LEDType* HDK_Get_Cisco_LEDType(HDK_Struct* pStruct, HDK_Element element);
+extern HDK_Enum_Cisco_LEDType HDK_Get_Cisco_LEDTypeEx(HDK_Struct* pStruct, HDK_Element element, HDK_Enum_Cisco_LEDType eValue);
+extern HDK_Enum_Cisco_LEDType* HDK_Get_Cisco_LEDTypeMember(HDK_Member* pMember);
 
 /* HDK_Type_PN_DeviceType enumeration type */
 typedef enum _HDK_Enum_PN_DeviceType
