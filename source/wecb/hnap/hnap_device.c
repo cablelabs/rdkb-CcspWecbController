@@ -1540,7 +1540,8 @@ bool SetSSIDSettings(HDK_ClientContext *pCtx, void *rt)
 	HDK_Struct_Init(&input);
 	pStr1 = HDK_Set_Struct(&input, HDK_Element_Cisco_SSIDList);
 
-	for(k = 0; k < ssid_num; k++)
+        /* RDKB-5091 - Workaround for IoT enabling of SSID 7 and beyond until they are available. */
+        for(k = 0; (k < ssid_num) && (k <= HS_SSID_INS); k++)
 	{
 		if(sscanf(insPath[k], "Device.WiFi.SSID.%d.", &i) != 1)
 		{
@@ -1712,7 +1713,8 @@ bool SetSSIDSettings(HDK_ClientContext *pCtx, void *rt)
 			goto EXIT;
 		}
 
-		if(ssid_enable == false || i < HS_SSID_INS || i >= (HS_SSID_INS + HS_SSID_NUM))
+                /* RDKB-5091 - Workaround for IoT enabling of SSID 7 and beyond until they are available. */
+                if(ssid_enable == false || i < HS_SSID_INS)
 		{
 			primary_vlan = get_primary_lan_pvid();
 			vlan_id = find_ssid_pvid(i);
@@ -2850,7 +2852,8 @@ bool SetWPS(HDK_ClientContext *pCtx, void *rt)
 	//USG has 2 bugs about WPS pin which will cause not sync
 	HDK_Set_String(&input, HDK_Element_Cisco_PINCode, "12345670");
 
-	for(j = 0; j < ssid_num; j++)
+        /* RDKB-5091 - Workaround for IoT enabling of SSID 7 and beyond until they are available. */
+        for(j = 0; (j < ssid_num) && (j <= HS_SSID_INS); j++)
 	{
 		if(sscanf(insPath[j], "Device.WiFi.SSID.%d.", &i) != 1)
 		{
