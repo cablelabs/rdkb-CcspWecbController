@@ -423,7 +423,7 @@ int main(int argc, char* argv[])
         exit(1);
     }
 
-    system("touch /tmp/wifi_initialized");
+    system("touch /tmp/wecb_initialized");
 
     if ( bRunAsDaemon )
     {
