@@ -693,32 +693,6 @@ HDK_ClientError HDK_ClientMethod_Cisco_SetWPS(HDK_ClientContext* pClientCtx, int
 }
 
 /*
- * http://cisco.com/HNAPExt/GetLEDStatus
- */
-HDK_ClientError HDK_ClientMethod_Cisco_GetLEDStatus(HDK_ClientContext* pClientCtx, int iTimeoutSecs, HDK_Struct* pOutput, HDK_Enum_Result* pResult)
-{
-    HDK_ClientError error;
-    HDK_Struct sInput;
-    HDK_Struct_Init(&sInput);
-    error = HDK_Client__MethodHelper__(pClientCtx, iTimeoutSecs, HDK_Element_Cisco_GetLEDStatus, &sInput, HDK_Element_Cisco_GetLEDStatusResponse, pOutput, HDK_Element_Cisco_GetLEDStatusResult, pResult);
-    HDK_Struct_Free(&sInput);
-    return error;
-}
-
-/*
- * http://cisco.com/HNAPExt/SetLEDs
- */
-HDK_ClientError HDK_ClientMethod_Cisco_SetLEDs(HDK_ClientContext* pClientCtx, int iTimeoutSecs, HDK_Struct* pInput, HDK_Enum_Result* pResult)
-{
-    HDK_ClientError error;
-    HDK_Struct sOutput;
-    HDK_Struct_Init(&sOutput);
-    error = HDK_Client__MethodHelper__(pClientCtx, iTimeoutSecs, HDK_Element_Cisco_SetLEDs, pInput, HDK_Element_Cisco_SetLEDsResponse, &sOutput, HDK_Element_Cisco_SetLEDsResult, pResult);
-    HDK_Struct_Free(&sOutput);
-    return error;
-}
-
-/*
  * http://purenetworks.com/HNAP1/GetDeviceSettings
  */
 HDK_ClientError HDK_ClientMethod_PN_GetDeviceSettings(HDK_ClientContext* pClientCtx, int iTimeoutSecs, HDK_Struct* pOutput, HDK_Enum_Result* pResult)

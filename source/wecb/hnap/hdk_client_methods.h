@@ -97,8 +97,6 @@ typedef struct _HDK_ClientContext
 #define HDK_CLIENTMETHOD_CISCO_SETSSIDSETTINGS
 #define HDK_CLIENTMETHOD_CISCO_SETTOD
 #define HDK_CLIENTMETHOD_CISCO_SETWPS
-#define HDK_CLIENTMETHOD_CISCO_GETLEDSTATUS
-#define HDK_CLIENTMETHOD_CISCO_SETLEDS
 #define HDK_CLIENTMETHOD_PN_GETDEVICESETTINGS
 #define HDK_CLIENTMETHOD_PN_GETWLANRADIOS
 #define HDK_CLIENTMETHOD_PN_ISDEVICEREADY
@@ -111,8 +109,6 @@ HDK_ClientError HDK_ClientMethod_Cisco_SetRadios(HDK_ClientContext* pClientCtx, 
 HDK_ClientError HDK_ClientMethod_Cisco_SetSSIDSettings(HDK_ClientContext* pClientCtx, int timeoutMsecs, HDK_Struct* pInput, HDK_Enum_Result* pResult);
 HDK_ClientError HDK_ClientMethod_Cisco_SetTOD(HDK_ClientContext* pClientCtx, int timeoutMsecs, HDK_Struct* pInput, HDK_Enum_Result* pResult);
 HDK_ClientError HDK_ClientMethod_Cisco_SetWPS(HDK_ClientContext* pClientCtx, int timeoutMsecs, HDK_Struct* pInput, HDK_Enum_Result* pResult);
-HDK_ClientError HDK_ClientMethod_Cisco_GetLEDStatus(HDK_ClientContext* pClientCtx, int iTimeoutSecs, HDK_Struct* pOutput, HDK_Enum_Result* pResult);
-HDK_ClientError HDK_ClientMethod_Cisco_SetLEDs(HDK_ClientContext* pClientCtx, int iTimeoutSecs, HDK_Struct* pInput, HDK_Enum_Result* pResult);
 HDK_ClientError HDK_ClientMethod_PN_GetDeviceSettings(HDK_ClientContext* pClientCtx, int timeoutMsecs, HDK_Struct* pOutput, HDK_Enum_Result* pResult);
 HDK_ClientError HDK_ClientMethod_PN_GetWLanRadios(HDK_ClientContext* pClientCtx, int timeoutMsecs, HDK_Struct* pOutput, HDK_Enum_Result* pResult);
 HDK_ClientError HDK_ClientMethod_PN_IsDeviceReady(HDK_ClientContext* pClientCtx, int timeoutMsecs, HDK_Enum_Result* pResult);
