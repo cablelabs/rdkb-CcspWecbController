@@ -1934,6 +1934,22 @@ bool SetSSIDSettings(HDK_ClientContext *pCtx, void *rt)
 		if(MBus_GetParamVal(mbus, path, val, sizeof(val)) == 0)
 		{
 			HDK_IPAddress tmp;
+                        //For sync failure when radius server is " "
+                        if(val != NULL){
+                            char* check;
+                            check = strchr(val, '.');
+                            if(check == NULL)
+                            {
+                              log_printf(LOG_ERR, "Radius server string is wrong. Fallback to 0.0.0.0\n");
+                              strcpy(val, "0.0.0.0");
+                            }
+                        }
+                        else
+                        {
+                           memset(val, 0, sizeof(val));
+                           log_printf(LOG_ERR, "Radius server string is NULL. Fallback to 0.0.0.0\n");
+                           strcpy(val, "0.0.0.0");
+                        }
 			if(stringtoip(val, &tmp) == false)
 			{
 				goto EXIT;
