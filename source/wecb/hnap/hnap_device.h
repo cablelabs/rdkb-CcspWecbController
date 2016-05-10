@@ -45,8 +45,10 @@
 #include <strings.h>
 
 // HNAP device type supported in WECB
-#define DEVICE_WIFI_EXTENDER					"hnap:WiFiExtender"
-#define DEVICE_WIFI_EXTENDER_SYNCED				"hnap:WiFiExtenderSynced"
+#define DEVICE_WIFI_EXTENDER                                                "hnap:WiFiExtender"
+#define DEVICE_WIFI_EXTENDER_V2                                             "hnap:WiFiExtenderV2" 
+#define DEVICE_WIFI_EXTENDER_SYNCED                                         "hnap:WiFiExtenderSynced"
+#define DEVICE_WIFI_EXTENDER_SYNCED_V2                                      "hnap:WiFiExtenderSyncedV2"
 #define	WECB_USER								"cusadmin"
 #define WECB_PW								    "Xfinity"
 struct radio_cfg
