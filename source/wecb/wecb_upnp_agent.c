@@ -128,11 +128,11 @@ int WECB_UPnPHandler(Upnp_EventType EventType, void *Event, void *Cookie)
         log_printf(LOG_INFO, "Find Device %p:Expires: %d  DeviceID:%s  DeviceType:%s  ServiceType:%s  ServiceVer:%s  Location:%s  Os:\"%s\"  Date:%s  Ext:\"%s\"\n", 
         d_event, d_event->Expires, d_event->DeviceId, d_event->DeviceType, d_event->ServiceType, d_event->ServiceVer, d_event->Location, d_event->Os, d_event->Date, d_event->Ext);
 
-        //we only care hnap:WiFiExtender DeviceType
+        //we only care hnap:WiFiExtender and hnap:WiFiExtenderV2 DeviceType
 		if(WECB_CheckNoneEmpty(d_event->Location) && WECB_CheckNoneEmpty(d_event->DeviceId) && WECB_CheckNoneEmpty(d_event->DeviceType))  
         {
-            //if(strstr(d_event->DeviceType, DEVICE_WIFI_EXTENDER)) 
-            if(!strncmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER, strlen(DEVICE_WIFI_EXTENDER))) 
+            if(!strncmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER, strlen(DEVICE_WIFI_EXTENDER)) ||
+               !strncmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER_V2, strlen(DEVICE_WIFI_EXTENDER_V2))) 
 			{
 				struct sockaddr_storage *dst_addr = (struct sockaddr_storage*)&d_event->DestAddr;
 				if(dst_addr->ss_family == AF_INET)
@@ -157,7 +157,8 @@ int WECB_UPnPHandler(Upnp_EventType EventType, void *Event, void *Cookie)
 				}
 				//printf("the wecb ip is %s\n", wecb_ip);	
 				//when WECB reports no sync, need to check if physical port has been switched 
-				if(!strcmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER))
+				if(!strcmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER) ||
+                                   !strcmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER_V2))
 				{
 					phy_port = get_phy_port(wecb_ip);
 					if(phy_port == -1)
@@ -182,7 +183,7 @@ int WECB_UPnPHandler(Upnp_EventType EventType, void *Event, void *Cookie)
 				PHnapDevice pDevice = NULL;
 				
             log_printf(LOG_WARNING, "Device %s report it is %s\n", &(d_event->DeviceId[5]), 
-                     !strcmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER_SYNCED) ? "sync" : "not sync");   
+                     (!strcmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER_SYNCED) || !strcmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER_SYNCED_V2)) ? "sync" : "not sync");
 				pthread_mutex_lock(&device_list_mutex);
 				pDevice	= Hnap_FindDeviceByUUID(&(d_event->DeviceId[5]));
 
@@ -202,12 +203,15 @@ int WECB_UPnPHandler(Upnp_EventType EventType, void *Event, void *Cookie)
 					//printf("v4 addr %s v6 addr %s\n", pDevice->addr, pDevice->addr6);
 					
 					//when we are doing initial sync, need to ignore upnp status to avoid sync again and again 
-					if(!strcmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER) && pDevice->sync_mask != 0xFFFFFFFF)
+					if((!strcmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER) || 
+                                            !strcmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER_V2)) && 
+                                            pDevice->sync_mask != 0xFFFFFFFF)
 					{
 						pDevice->notify_mask=0xFFFFFFFF;
 					}
 #ifdef CONFIG_CISCO_HOTSPOT				
-					if(!strcmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER))
+					if(!strcmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER) ||
+                                           !strcmp(d_event->DeviceType, DEVICE_WIFI_EXTENDER_V2))
 					{
 						int i = 0;
 						for(; i < HS_SSID_NUM; i++)
@@ -586,12 +590,20 @@ void* WECB_SSDP_DiscoveryAll(void *P)
             ctrlpt_handle,
             WECB_MX,
             //"hnap:all", //both ssdp:all and hnap:all work for HNAP devices.
-            "hnap:WiFiExtender",
+            "hnap:WiFiExtenderV2",
             NULL 
         );
         if(res != UPNP_E_SUCCESS) {
-            log_printf(LOG_ERR, "WECB_SSDP_DiscoveryAll return error %d\n", res);
-            break;
+            res = UpnpSearchAsync(
+                ctrlpt_handle,
+                WECB_MX,
+                "hnap:WiFiExtender",
+                NULL
+            );
+            if(res != UPNP_E_SUCCESS) {
+                log_printf(LOG_ERR, "WECB_SSDP_DiscoveryAll return error %d\n", res);
+                break;
+            }
         }
 
         sleep(SSDP_INTERVAL);
