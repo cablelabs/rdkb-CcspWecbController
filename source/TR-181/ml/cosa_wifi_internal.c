@@ -78,6 +78,7 @@
 #include "cosa_apis.h"
 #include "cosa_wifi_internal.h"
 #include "plugin_main_apis.h"
+#include "cosa_wecb_wrapper.h"
 
 extern void *                       g_pDslhDmlAgent;
 
@@ -199,19 +200,19 @@ CosaWifiInitialize
     if (pProc)
     {
         ulRole = (ULONG)(*pProc)();
-        CcspTraceWarning(("CosaWifiInitialize - LPC role is %d...\n", ulRole));
+        CcspWecbTraceWarning(("CosaWifiInitialize - LPC role is %d...\n", ulRole));
     }
     
 #ifdef _COSA_SIM_
 
     if ( ulRole == LPC_ROLE_PARTY ) 
     {
-        CcspTraceWarning(("CosaWifiInitialize - AcquireFunction COSACreateSlapObject..."));
+        CcspWecbTraceWarning(("CosaWifiInitialize - AcquireFunction COSACreateSlapObject..."));
         pProc = (COSAGetHandleProc)pPluginInfo->AcquireFunction("COSACreateSlapObject");
     }
     else if ( ulRole == LPC_ROLE_MANAGER ) 
     {
-        CcspTraceWarning(("CosaWifiInitialize - AcquireFunction COSAAcquirePoamObject..."));
+        CcspWecbTraceWarning(("CosaWifiInitialize - AcquireFunction COSAAcquirePoamObject..."));
         pProc = (COSAGetHandleProc)pPluginInfo->AcquireFunction("COSAAcquirePoamObject");
     }
     
@@ -219,17 +220,17 @@ CosaWifiInitialize
     {
         if (NULL != pProc)
         {
-            CcspTraceWarning(("succeeded!\n"));
+            CcspWecbTraceWarning(("succeeded!\n"));
         }
         else
         {
-            CcspTraceWarning(("failed!\n"));
+            CcspWecbTraceWarning(("failed!\n"));
         }
     }
 
     if ( ulRole == LPC_ROLE_PARTY ) 
     {
-        CcspTraceWarning(("CosaWifiInitialize - create slap object..."));
+        CcspWecbTraceWarning(("CosaWifiInitialize - create slap object..."));
         pObjDescriptor = (PSLAP_OBJECT_DESCRIPTOR)SlapCosaWifiDmGetSlapObjDescriptor((ANSC_HANDLE)NULL);
         pSlapWifiDm    = (*pProc)(pObjDescriptor);
         if (NULL != pSlapWifiDm)
@@ -237,25 +238,25 @@ CosaWifiInitialize
 #ifdef _COSA_SIM_        
             g_pCosaBEManager->has_wifi_slap = 1;
 #endif            
-            CcspTraceWarning(("succeeded!\n"));
+            CcspWecbTraceWarning(("succeeded!\n"));
         }
         else
         {
-            CcspTraceWarning(("failed!\n"));
+            CcspWecbTraceWarning(("failed!\n"));
         }
     }
     else if ( ulRole == LPC_ROLE_MANAGER )
     {
-        CcspTraceWarning(("CosaWifiInitialize - create poam object..."));
+        CcspWecbTraceWarning(("CosaWifiInitialize - create poam object..."));
         pObjDescriptor = (PSLAP_OBJECT_DESCRIPTOR)PoamCosaWifiDmGetPoamObjDescriptor((ANSC_HANDLE)NULL);
         pPoamWiFiDm    = (*pProc)(pObjDescriptor);
         if (NULL != pPoamWiFiDm)
         {
-            CcspTraceWarning(("succeeded!\n"));
+            CcspWecbTraceWarning(("succeeded!\n"));
         }
         else
         {
-            CcspTraceWarning(("failed!\n"));
+            CcspWecbTraceWarning(("failed!\n"));
         }
     }
     else if ( ulRole == LPC_ROLE_NONE )
@@ -267,20 +268,20 @@ CosaWifiInitialize
 #elif _COSA_DRG_CNS_
     if ( (ulRole != LPC_ROLE_NONE) && (ulRole != LPC_ROLE_INVALID))
     {
-        CcspTraceWarning(("CosaWifiInitialize - AcquireFunction COSACreateSlapObject..."));
+        CcspWecbTraceWarning(("CosaWifiInitialize - AcquireFunction COSACreateSlapObject..."));
     
         pProc = (COSAGetHandleProc)pPluginInfo->AcquireFunction("COSACreateSlapObject");
         
         if (NULL != pProc)
         {
-            CcspTraceWarning(("succeeded!\n"));
+            CcspWecbTraceWarning(("succeeded!\n"));
         }
         else
         {
-            CcspTraceWarning(("failed!\n"));
+            CcspWecbTraceWarning(("failed!\n"));
         }
         
-        CcspTraceWarning(("CosaWifiInitialize - create slap object..."));
+        CcspWecbTraceWarning(("CosaWifiInitialize - create slap object..."));
             
         pObjDescriptor = (PSLAP_OBJECT_DESCRIPTOR)SlapCosaWifiDmGetSlapObjDescriptor((ANSC_HANDLE)NULL);
         
@@ -288,31 +289,31 @@ CosaWifiInitialize
         
         if (NULL != pSlapWifiDm)
         {
-            CcspTraceWarning(("succeeded!\n"));
+            CcspWecbTraceWarning(("succeeded!\n"));
         }
         else
         {
-            CcspTraceWarning(("failed!\n"));
+            CcspWecbTraceWarning(("failed!\n"));
         }
     }
 #elif _COSA_DRG_TPG_
 
     if ( (ulRole != LPC_ROLE_NONE) && (ulRole != LPC_ROLE_INVALID))
     {
-        CcspTraceWarning(("CosaWifiInitialize - AcquireFunction COSAAcquirePoamObject..."));
+        CcspWecbTraceWarning(("CosaWifiInitialize - AcquireFunction COSAAcquirePoamObject..."));
         
         pProc = (COSAGetHandleProc)pPluginInfo->AcquireFunction("COSAAcquirePoamObject");
         
         if (NULL != pProc)
         {
-            CcspTraceWarning(("succeeded!\n"));
+            CcspWecbTraceWarning(("succeeded!\n"));
         }
         else
         {
-            CcspTraceWarning(("failed!\n"));
+            CcspWecbTraceWarning(("failed!\n"));
         }
         
-        CcspTraceWarning(("CosaWifiInitialize - create poam object..."));
+        CcspWecbTraceWarning(("CosaWifiInitialize - create poam object..."));
         
         pObjDescriptor = (PSLAP_OBJECT_DESCRIPTOR)PoamCosaWifiDmGetPoamObjDescriptor((ANSC_HANDLE)NULL);
         
@@ -320,11 +321,11 @@ CosaWifiInitialize
         
         if (NULL != pPoamWiFiDm)
         {
-            CcspTraceWarning(("succeeded!\n"));
+            CcspWecbTraceWarning(("succeeded!\n"));
         }
         else
         {
-            CcspTraceWarning(("failed!\n"));
+            CcspWecbTraceWarning(("failed!\n"));
         }
     }
 #endif
@@ -337,7 +338,7 @@ CosaWifiInitialize
     
     if ( returnStatus != ANSC_STATUS_SUCCESS )
     {
-        CcspTraceWarning(("CosaWifiInitialize - WiFi failed to initialize. Is WiFi supposed to start?\n"));
+        CcspWecbTraceWarning(("CosaWifiInitialize - WiFi failed to initialize. Is WiFi supposed to start?\n"));
         
         return  returnStatus;
     }
@@ -856,7 +857,7 @@ CosaWifiReInitialize
     
     if ( returnStatus != ANSC_STATUS_SUCCESS )
     {
-        CcspTraceWarning(("CosaWifiInitialize - WiFi failed to initialize. Is WiFi supposed to start?\n"));
+        CcspWecbTraceWarning(("CosaWifiInitialize - WiFi failed to initialize. Is WiFi supposed to start?\n"));
         
         return  returnStatus;
     }

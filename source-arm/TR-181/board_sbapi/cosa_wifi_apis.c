@@ -88,6 +88,7 @@
 #include <ctype.h>
 #include "wecb_log.h"
 #include "wecb_common.h"
+#include "cosa_wecb_wrapper.h"
 
 struct ExtInfo
 {
@@ -400,11 +401,11 @@ int hotspot_update_circuit_ids(int greinst, int queuestart)
         size = sizeof(outdata);
         
         if (syscfg_get(NULL, "wan_physical_ifname", paramname, sizeof(paramname)) != 0) {
-            AnscTraceWarning(("fail to get wan_physical_ifname\n"));
+            CcspWecbTraceWarning(("fail to get wan_physical_ifname\n"));
             snprintf(paramname, sizeof(paramname), "erouter0");
         }
         if (get_if_hwaddr(paramname, circuitid, sizeof(circuitid)) != 0) {
-            AnscTraceWarning(("fail to get HW Addr for %s\n", paramname));
+            CcspWecbTraceWarning(("fail to get HW Addr for %s\n", paramname));
             snprintf(circuitid, sizeof(circuitid), "00:00:00:00:00:00");
         }
 

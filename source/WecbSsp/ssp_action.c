@@ -92,6 +92,8 @@
 
 #include "ssp_global.h"
 #include "ccsp_trace.h"
+#include "cosa_wecb_wrapper.h"
+
 extern ULONG                                       g_ulAllocatedSizePeak;
 
 extern  PDSLH_CPE_CONTROLLER_OBJECT     pDslhCpeController;
@@ -174,7 +176,7 @@ ssp_create_wifi
 
     if ( !pDslhCpeController )
     {
-        CcspTraceWarning(("CANNOT Create pDslhCpeController... Exit!\n"));
+        CcspWecbTraceWarning(("CANNOT Create pDslhCpeController... Exit!\n"));
 
         return ANSC_STATUS_RESOURCES;
     }
@@ -275,7 +277,7 @@ ssp_cancel_wifi
     }
     /* unregister component */
     nRet = CcspBaseIf_unregisterComponent(bus_handle, CrName, CpName );  
-    AnscTrace("unregisterComponent returns %d\n", nRet);
+    CcspWecbTraceInfo(("unregisterComponent returns %d\n", nRet));
 
 
     pDslhCpeController->Cancel((ANSC_HANDLE)pDslhCpeController);
