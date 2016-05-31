@@ -919,6 +919,7 @@ bool wecb_sync_thread(char *id)
 	memset(uri, 0, sizeof(uri));
 	int ret = false, radio_down = 0, i = 0, j = 0, index = -1;
 	char addr[160]; 
+        bool v2_cap = false;
 
 	pthread_t self = pthread_self();	
 
@@ -968,6 +969,11 @@ bool wecb_sync_thread(char *id)
 		}
 		pDevice->sync_mask |= pDevice->notify_mask;
 		mask = pDevice->sync_mask;
+                //in case v2 & v1 mixed upnp, we treat as v2
+                if(!v2_cap && strstr(pDevice->device_type, "V2"))
+                {
+                    v2_cap = true;
+                }
 		pDevice->notify_mask = 0;
 		pDevice->restart_pending = false;
 
@@ -1043,6 +1049,7 @@ bool wecb_sync_thread(char *id)
 			}
 
 			memcpy(wecb_status[index].ip, addr, sizeof(wecb_status[index].ip));	
+                        wecb_status[index].is_v2 = v2_cap;
 		}
 		hnap_retry = 0;
 
@@ -1099,12 +1106,12 @@ bool wecb_sync_thread(char *id)
 		while(hnap_retry < MAX_RETRY)	
 		{
 				
-			if(GetClientInfo(pCtx, index == -1 ? NULL : &wecb_status[index]) == false)
+			if(GetClientInfo(pCtx, index == -1 ? NULL : &wecb_status[index], v2_cap) == false)
 			{
 				hnap_retry++;
 				if(hnap_retry >= MAX_RETRY)
 				{
-               log_printf(LOG_ERR, "GetClientInfo %s failed\n", uri);
+                                        log_printf(LOG_ERR, "GetClientInfo %s failed\n", uri);
 					sleep(SYNC_INTERVAL);
 					break;
 				}

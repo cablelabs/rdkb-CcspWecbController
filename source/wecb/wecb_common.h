@@ -35,6 +35,8 @@
 #ifndef WECB_COMMON_H
 #define WECB_COMMON_H
 
+#include <stdbool.h>
+
 //We won't save any information about USG native ssid in MoCA DM
 #define MAX_SSID									4
 #define SSID_QOS_NUM								4
@@ -60,7 +62,7 @@
 
 enum PAM_EVENT{SSID_SET=0x1, RADIO_SET=0x2, WPS_SET=0x4, TIME_SET=0x8, QUERY_ALL=0xFFFFFFFF};
 //which interface clients connected on WECB
-enum EXT_INF{WIFI_24=1, WIFI5, ETH};
+enum EXT_INF{WIFI_24=1, WIFI5, ETH, MOCA};
 enum EXT_STATUS{INIT=1, SYNCING, SYNCED};
 
 
@@ -68,6 +70,8 @@ struct ExtClient
 {
 	char name[36];
 	char mac[20];
+        char ssid[64];
+        int rssi;
 	int inf;
 };
 
@@ -96,6 +100,7 @@ struct ExtStatus
 	int status;
 	struct ExtClient clients[MAX_EXT_CLIENT];
 	struct ExtSSID ssid[MAX_EXT_SSID];
+        bool is_v2;
 };
 
 
