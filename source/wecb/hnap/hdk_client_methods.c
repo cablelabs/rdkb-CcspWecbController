@@ -68,7 +68,6 @@
 #include "hdk_internal.h"
 #include "hdk_client_http_interface.h"
 #include "hdk_logging.h"
-#include "hdk.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -122,7 +121,6 @@ static void ReplaceCharacter(char* pc)
 static bool IsValidUTF8ContinuationSequence(char* pcBegin, unsigned int celt)
 {
     unsigned int index;
-
     for (index = 0; index < celt; index++)
     {
         if (!IsUTF8_Continuation(pcBegin[index]))
@@ -186,8 +184,8 @@ static void EnsureUTF8(char* pcBegin, unsigned int cbBuf,
         }
         else
         {
-            *pfParseContextEdge = true;
             unsigned int indexEdge;
+            *pfParseContextEdge = true;
             for (indexEdge = 0; indexEdge < celtEdgeUsed; indexEdge++)
             {
                 if (IsUTF8_SingleByte(pcEdge[indexEdge]))
@@ -288,7 +286,6 @@ typedef struct _ReceiveContext
 static unsigned int Receive_Callback(void* pReceiveCtx, char* pBuf, unsigned int cbBuf)
 {
     ReceiveContext* pCtx = (ReceiveContext*)pReceiveCtx;
-
 
     if (HDK_ParseError_OK == pCtx->parseError)
     {
@@ -420,7 +417,6 @@ static int SendHNAPRequest(HDK_Struct* pInput, HDK_Struct* pOutput, HDK_ParseErr
                 break;
             }
 
-            //if (!HDK_Client_Http_RequestAddHeader(pRequestCtx, "Content-Type: text/xml; charset=\"utf-8\""))
             if (!HDK_Client_Http_RequestAddHeader(pRequestCtx, "Content-Type: text/xml"))
             {
                 break;

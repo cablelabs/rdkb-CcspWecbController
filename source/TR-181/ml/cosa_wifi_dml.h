@@ -1277,6 +1277,14 @@ ExtenderClient_GetParamUlongValue
         ULONG*                      puLong
     );
 
+BOOL
+ExtenderClient_GetParamIntValue
+    (
+        ANSC_HANDLE                 hInsContext,
+        char*                       ParamName,
+        int*                        pInt
+    );
+
 ULONG
 ExtenderClient_GetParamStringValue
 	(

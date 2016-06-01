@@ -916,7 +916,7 @@ EXIT:
 }	
 
 
-bool GetClientInfo(HDK_ClientContext *pCtx, void *rt)
+bool GetClientInfo(HDK_ClientContext *pCtx, void *rt, bool is_v2)
 {
 	HDK_ClientError error = HDK_ClientError_OK;
 	HDK_Enum_Result result;
@@ -924,9 +924,9 @@ bool GetClientInfo(HDK_ClientContext *pCtx, void *rt)
 	HDK_Struct output;
 	HDK_Struct *pStr1 = NULL, *pStr2 = NULL;
 	HDK_Member *pMember = NULL;
-	char *p = NULL;
+	char *p = NULL, *ssid = NULL;
 	HDK_MACAddress* pMACAddress = NULL;
-	int i = 0;
+	int i = 0, *rssi = NULL;
 	struct ExtStatus *p_ext_info = (struct ExtStatus *)rt;
 	HDK_Enum_Cisco_DeviceInf *pInf = NULL;
 		
@@ -985,13 +985,47 @@ bool GetClientInfo(HDK_ClientContext *pCtx, void *rt)
 						continue;
 					}
 
+                                        if(is_v2 == true)
+                                        {
+                                            if((rssi = HDK_Get_Int(pStr2, HDK_Element_Cisco_RSSI)) == NULL)
+                                            {
+                                                log_printf(LOG_WARNING, "can't find clientinfo RSSI for v2\n");
+                                                continue;
+                                            }
+
+                                            if((ssid = HDK_Get_String(pStr2, HDK_Element_Cisco_SSID)) == NULL)
+                                            {
+                                                log_printf(LOG_WARNING, "can't find clientinfo SSID for v2\n");
+                                                continue;
+                                            }
+                                        }
+
 					p_ext_info->clients[i].inf = *pInf;
+                                        if(rssi != NULL)
+                                        {
+                                            p_ext_info->clients[i].rssi = *rssi;
+                                        }
+                                        else
+                                        {
+                                            p_ext_info->clients[i].rssi = 0;
+                                        }
+
 					if(p != NULL)
 						strncpy(p_ext_info->clients[i].name, p, sizeof(p_ext_info->clients[i].name) - 1);
 					else
 						strcpy(p_ext_info->clients[i].name, "");
 					p_ext_info->clients[i].name[sizeof(p_ext_info->clients[i].name) - 1] = '\0';
 					
+                                        if(ssid != NULL)
+                                        {
+                                            strncpy(p_ext_info->clients[i].ssid, ssid, sizeof(p_ext_info->clients[i].ssid) - 1);
+                                        }
+                                        else
+                                        {
+                                            strcpy(p_ext_info->clients[i].ssid, "");
+                                        }
+                                        p_ext_info->clients[i].ssid[sizeof(p_ext_info->clients[i].ssid) - 1] = '\0';
+
 					sprintf(p_ext_info->clients[i].mac, "%02X:%02X:%02X:%02X:%02X:%02X", pMACAddress->a,  pMACAddress->b, 
 							pMACAddress->c, pMACAddress->d, pMACAddress->e, pMACAddress->f);
 					i++;

@@ -114,6 +114,7 @@ typedef enum _HDK_Element
     HDK_Element_Cisco_PreSharedKey,
     HDK_Element_Cisco_Qos,
     HDK_Element_Cisco_QosSettings,
+    HDK_Element_Cisco_RSSI,
     HDK_Element_Cisco_RadioID,
     HDK_Element_Cisco_RadioList,
     HDK_Element_Cisco_RadioSettings,
@@ -275,7 +276,6 @@ extern HDK_Struct* HDK_Get_Struct(HDK_Struct* pStruct, HDK_Element element);
 extern HDK_Struct* HDK_Get_StructMember(HDK_Member* pMember);
 void HDK_Detach_Struct(HDK_Member* pMember, HDK_Member* pMember2);
 
-
 /* HNAP struct stack initialization/free */
 void HDK_Struct_Init(HDK_Struct* pStruct);
 void HDK_Struct_Free(HDK_Struct* pStruct);
@@ -378,6 +378,7 @@ typedef enum _HDK_Enum_Cisco_DeviceInf
     HDK_Enum_Cisco_DeviceInf_WiFi_2_4G,
     HDK_Enum_Cisco_DeviceInf_WiFi_5_0G,
     HDK_Enum_Cisco_DeviceInf_Eth,
+    HDK_Enum_Cisco_DeviceInf_MoCA,
     HDK_Enum_Cisco_DeviceInf_
 } HDK_Enum_Cisco_DeviceInf;
 
@@ -418,9 +419,9 @@ typedef enum _HDK_Enum_Cisco_WiFiMode
     HDK_Enum_Cisco_WiFiMode_802_11bgn,
     HDK_Enum_Cisco_WiFiMode_802_11gn,
     HDK_Enum_Cisco_WiFiMode_802_11an,
-	HDK_Enum_Cisco_WiFiMode_802_11bgnac, 
+    HDK_Enum_Cisco_WiFiMode_802_11bgnac,
     HDK_Enum_Cisco_WiFiMode_802_11gnac,
-    HDK_Enum_Cisco_WiFiMode_802_11nac, 
+    HDK_Enum_Cisco_WiFiMode_802_11nac,
     HDK_Enum_Cisco_WiFiMode_802_11ac,
     HDK_Enum_Cisco_WiFiMode_802_11anac,
     HDK_Enum_Cisco_WiFiMode_802_11aac,
@@ -536,9 +537,9 @@ typedef enum _HDK_Enum_PN_WiFiMode
     HDK_Enum_PN_WiFiMode_802_11bgn,
     HDK_Enum_PN_WiFiMode_802_11gn,
     HDK_Enum_PN_WiFiMode_802_11an,
-	HDK_Enum_PN_WiFiMode_802_11bgnac, 
+    HDK_Enum_PN_WiFiMode_802_11bgnac,
     HDK_Enum_PN_WiFiMode_802_11gnac,
-    HDK_Enum_PN_WiFiMode_802_11nac, 
+    HDK_Enum_PN_WiFiMode_802_11nac,
     HDK_Enum_PN_WiFiMode_802_11ac,
     HDK_Enum_PN_WiFiMode_802_11anac,
     HDK_Enum_PN_WiFiMode_802_11aac,

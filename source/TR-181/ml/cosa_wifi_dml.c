@@ -5127,6 +5127,26 @@ ExtenderClient_GetParamUlongValue
 	return FALSE;
 }
 
+BOOL
+ExtenderClient_GetParamIntValue
+    (
+        ANSC_HANDLE                 hInsContext,
+        char*                       ParamName,
+        int*                        pInt
+    )
+{
+    struct ExtClient               *pMyObject     = (struct ExtClient *)hInsContext;
+    /* check the parameter name and return the corresponding value */
+    if( AnscEqualString(ParamName, "RSSI", TRUE))
+    {
+        /* collect value */
+        *pInt = pMyObject->rssi;
+
+        return TRUE;
+    }
+    return FALSE;
+}
+
 ULONG
 ExtenderClient_GetParamStringValue
 	(
@@ -5170,5 +5190,21 @@ ExtenderClient_GetParamStringValue
         return 0;
     }
 	
+    if( AnscEqualString(ParamName, "SSID", TRUE))
+    {
+        /* collect value */
+        if ( AnscSizeOfString(pMyObject->ssid) < *pUlSize)
+        {
+            AnscCopyString(pValue, pMyObject->ssid);
+            return 0;
+        }
+             else
+        {
+            *pUlSize = AnscSizeOfString(pMyObject->ssid)+1;
+            return 1;
+        }
+        return 0;
+    }
+
 	return -1;
 }

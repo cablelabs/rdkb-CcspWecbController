@@ -60,7 +60,7 @@ bool SetTOD(HDK_ClientContext *pCtx, void *rt);
 bool IsDeviceReady(HDK_ClientContext *pCtx, void *rt);
 bool SetDoRestart(HDK_ClientContext *pCtx, void *rt);
 bool GetDeviceSettings(HDK_ClientContext *pCtx, void *rt);
-bool GetClientInfo(HDK_ClientContext *pCtx, void *rt);
+bool GetClientInfo(HDK_ClientContext *pCtx, void *rt, bool is_v2);
 bool GetWlanRadios(HDK_ClientContext *pCtx, void *rt);
 bool GetExtenderStatus(HDK_ClientContext *pCtx, void *rt);
 void* clientctx_init(const char *url, const char *user, const char *pw);
