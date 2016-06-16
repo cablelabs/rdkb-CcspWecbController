@@ -50,6 +50,10 @@
 #include "breakpad_wrapper.h"
 #endif
 
+#include "cosa_wecb_wrapper.h" 
+
+#define DEBUG_INI_NAME  "/etc/debug.ini"
+
 PDSLH_CPE_CONTROLLER_OBJECT     pDslhCpeController      = NULL;
 PCOMPONENT_COMMON_DM            g_pComponent_Common_Dm  = NULL;
 char                            g_Subsystem[32]         = {0};
@@ -58,6 +62,9 @@ PCCSP_FC_CONTEXT                pWifiFcContext           = (PCCSP_FC_CONTEXT    
 PCCSP_CCD_INTERFACE             pWifiCcdIf               = (PCCSP_CCD_INTERFACE        )NULL;
 PCCC_MBI_INTERFACE              pWifiMbiIf               = (PCCC_MBI_INTERFACE         )NULL;
 BOOL                            g_bActive               = FALSE;
+static char                     g_WecbName[256]       = {0};
+char*                           g_WecbCompName        = g_WecbName;
+extern ANSC_HANDLE bus_handle;
 
 int  cmd_dispatch(int  command)
 {
@@ -75,7 +82,7 @@ int  cmd_dispatch(int  command)
             case	'e' :
 
 #ifdef _ANSC_LINUX
-                CcspTraceInfo(("Connect to bus daemon...\n"));
+                CcspWecbTraceNotice(("Connect to bus daemon...\n"));
 
             {
                 char                            CName[256];
@@ -104,7 +111,7 @@ int  cmd_dispatch(int  command)
 
                 g_bActive = TRUE;
 
-                CcspTraceInfo(("Wifi Agent loaded successfully...\n"));
+                CcspWecbTraceNotice(("Wifi Agent loaded successfully...\n"));
 
             break;
 
@@ -124,7 +131,7 @@ int  cmd_dispatch(int  command)
 
             for ( i = 0; i < ulReturnValCount; i++ )
             {
-                CcspTraceWarning(("Parameter %d name: %s value: %s \n", i+1, ppReturnVal[i]->parameterName, ppReturnVal[i]->parameterValue));
+                CcspWecbTraceError(("Parameter %d name: %s value: %s \n", i+1, ppReturnVal[i]->parameterName, ppReturnVal[i]->parameterValue));
             }
 
 			break;
@@ -184,7 +191,7 @@ static void daemonize(void) {
 		break;
 	case -1:
 		// Error
-		CcspTraceInfo(("Error daemonizing (fork)! %d - %s\n", errno, strerror(
+		CcspWecbTraceNotice(("Error daemonizing (fork)! %d - %s\n", errno, strerror(
 				errno)));
 		exit(0);
 		break;
@@ -193,7 +200,7 @@ static void daemonize(void) {
 	}
 
 	if (setsid() < 	0) {
-		CcspTraceInfo(("Error demonizing (setsid)! %d - %s\n", errno, strerror(errno)));
+		CcspWecbTraceNotice(("Error demonizing (setsid)! %d - %s\n", errno, strerror(errno)));
 		exit(0);
 	}
 
@@ -225,41 +232,49 @@ static void daemonize(void) {
 
 void sig_handler(int sig)
 {
-
-    if ( sig == SIGINT ) {
+	   if ( sig == SIGINT ) {
     	signal(SIGINT, sig_handler); /* reset it to this function */
-    	CcspTraceInfo(("SIGINT received!\n"));
+    	CcspWecbTraceNotice(("SIGINT received!\n"));
         exit(0);
     }
     else if ( sig == SIGUSR1 ) {
     	signal(SIGUSR1, sig_handler); /* reset it to this function */
-    	CcspTraceInfo(("SIGUSR1 received!\n"));
+    	CcspWecbTraceNotice(("SIGUSR1 received!\n"));
     }
     else if ( sig == SIGUSR2 ) {
-    	CcspTraceInfo(("SIGUSR2 received!\n"));
+    	CcspWecbTraceNotice(("SIGUSR2 received!\n"));
     }
     else if ( sig == SIGCHLD ) {
     	signal(SIGCHLD, sig_handler); /* reset it to this function */
-    	CcspTraceInfo(("SIGCHLD received!\n"));
+    	CcspWecbTraceNotice(("SIGCHLD received!\n"));
     }
     else if ( sig == SIGPIPE ) {
     	signal(SIGPIPE, sig_handler); /* reset it to this function */
-    	CcspTraceInfo(("SIGPIPE received!\n"));
+    	CcspWecbTraceNotice(("SIGPIPE received!\n"));
     }
     else if ( sig == SIGTERM )
     {
-        CcspTraceInfo(("SIGTERM received!\n"));
+        CcspWecbTraceNotice(("SIGTERM received!\n"));
         exit(0);
     }
     else if ( sig == SIGKILL )
     {
-        CcspTraceInfo(("SIGKILL received!\n"));
+        CcspWecbTraceNotice(("SIGKILL received!\n"));
         exit(0);
     }
+	else if ( sig == SIGALRM ) 
+    {
+    	signal(SIGALRM, sig_handler); /* reset it to this function */
+        CcspWecbTraceInfo(("SIGALRM received!\n"));
+        RDKLogEnable 		= GetLogInfo(bus_handle,"eRT.","Device.LogAgent.X_RDKCENTRAL-COM_LoggerEnable");
+        RDKLogLevel 		= (char)GetLogInfo(bus_handle,"eRT.","Device.LogAgent.X_RDKCENTRAL-COM_LogLevel");
+        WECB_RDKLogLevel 	= GetLogInfo(bus_handle,"eRT.","Device.LogAgent.X_RDKCENTRAL-COM_Wecb_LogLevel");
+        WECB_RDKLogEnable 	= (char)GetLogInfo(bus_handle,"eRT.","Device.LogAgent.X_RDKCENTRAL-COM_Wecb_LoggerEnable");
+	}
     else {
     	/* get stack trace first */
     	_print_stack_backtrace();
-    	CcspTraceInfo(("Signal %d received, exiting!\n", sig));
+    	CcspWecbTraceNotice(("Signal %d received, exiting!\n", sig));
     	exit(0);
     }
 }
@@ -310,6 +325,10 @@ int main(int argc, char* argv[])
     char                            *subSys            = NULL;
     extern ANSC_HANDLE bus_handle;
 
+#ifdef FEATURE_SUPPORT_RDKLOG
+	rdk_logger_init(DEBUG_INI_NAME);
+#endif /* FEATURE_SUPPORT_RDKLOG */
+
     /*
      *  Load the start configuration
      */
@@ -326,9 +345,14 @@ int main(int argc, char* argv[])
     {
         exit(1);
     }
-    
+
     /* Set the global pComponentName */
     pComponentName = gpWecbStartCfg->ComponentName;
+
+	if ( g_WecbName[0] == 0 )
+	{
+		AnscCopyString(g_WecbName, gpWecbStartCfg->ComponentName);
+	}
 
 //#if defined(_DEBUG) && defined(_COSA_SIM_)
 //    AnscSetTraceLevel(CCSP_TRACE_LEVEL_DEBUG);
@@ -341,7 +365,7 @@ int main(int argc, char* argv[])
         if ( (strcmp(argv[idx], "-subsys") == 0) )
         {
             AnscCopyString(g_Subsystem, argv[idx+1]);
-            CcspTraceWarning(("\nSubsystem is %s\n", g_Subsystem));
+            CcspWecbTraceWarning(("\nSubsystem is %s\n", g_Subsystem));
         }
         else if ( strcmp(argv[idx], "-c" ) == 0 )
         {
@@ -364,6 +388,7 @@ int main(int argc, char* argv[])
         cmd_dispatch(cmdChar);
     }
 #elif defined(_ANSC_LINUX)
+
     if ( bRunAsDaemon )
     {
         daemonize();
@@ -374,7 +399,7 @@ int main(int argc, char* argv[])
     fd = fopen("/var/tmp/CcspWecbController.pid", "w+");
     if ( !fd )
     {
-        CcspTraceWarning(("Create /var/tmp/CcspWecbController.pid error. \n"));
+        CcspWecbTraceWarning(("Create /var/tmp/CcspWecbController.pid error. \n"));
         return 1;
     }
     sprintf(cmd, "%d", getpid());
@@ -384,15 +409,16 @@ int main(int argc, char* argv[])
 
 #ifdef INCLUDE_BREAKPAD
     breakpad_ExceptionHandler();
+	signal(SIGALRM, sig_handler);
 #else
     if (is_core_dump_opened())
     {
         signal(SIGUSR1, sig_handler);
-        CcspTraceWarning(("Core dump is opened, do not catch signal\n"));
+        CcspWecbTraceWarning(("Core dump is opened, do not catch signal\n"));
     }
     else
     {
-        CcspTraceWarning(("Core dump is NOT opened, backtrace if possible\n"));
+        CcspWecbTraceWarning(("Core dump is NOT opened, backtrace if possible\n"));
     	signal(SIGTERM, sig_handler);
     	signal(SIGINT, sig_handler);
     	signal(SIGUSR1, sig_handler);
@@ -405,14 +431,20 @@ int main(int argc, char* argv[])
     	signal(SIGILL, sig_handler);
     	signal(SIGQUIT, sig_handler);
     	signal(SIGHUP, sig_handler);
+    	signal(SIGALRM, sig_handler);
     }
 
 #ifdef USE_PCD_API_EXCEPTION_HANDLING
-    printf("Registering PCD exception handler for WecbCcspController \n");
+    CcspWecbTraceInfo(("Registering PCD exception handler for WecbCcspController \n"));
     PCD_api_register_exception_handlers( argv[0], NULL );
 #endif
 #endif
     cmd_dispatch('e');
+
+	RDKLogEnable	  = GetLogInfo(bus_handle,"eRT.","Device.LogAgent.X_RDKCENTRAL-COM_LoggerEnable");
+	RDKLogLevel 	  = (char)GetLogInfo(bus_handle,"eRT.","Device.LogAgent.X_RDKCENTRAL-COM_LogLevel");
+	WECB_RDKLogLevel  = GetLogInfo(bus_handle,"eRT.","Device.LogAgent.X_RDKCENTRAL-COM_Wecb_LogLevel");
+	WECB_RDKLogEnable = (char)GetLogInfo(bus_handle,"eRT.","Device.LogAgent.X_RDKCENTRAL-COM_Wecb_LoggerEnable");
 
     // printf("Calling Docsis\n");
 

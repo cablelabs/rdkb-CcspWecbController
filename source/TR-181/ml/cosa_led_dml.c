@@ -59,6 +59,7 @@
 #include "cosa_led_internal.h"
 #include "plugin_main_apis.h"
 #include "wecb_common.h"
+#include "cosa_wecb_wrapper.h"
 
 #define TIME_NO_NEGATIVE(x) ((long)(x) < 0 ? 0 : (x))
 
@@ -146,7 +147,7 @@ LED_GetParamUlongValue
     PCOSA_DATAMODEL_LED             pMyObject    = (PCOSA_DATAMODEL_LED)g_pCosaBEManager->hLED;
     PCOSA_DML_LED                    pLED          = pMyObject->pLED;
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -428,7 +429,7 @@ Panel_GetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -488,7 +489,7 @@ Panel_SetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -568,7 +569,7 @@ Panel_GetParamUlongValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -672,7 +673,7 @@ Panel_SetParamUlongValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -777,7 +778,7 @@ Panel_GetParamStringValue
         return 0;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return -1;
 }
 
@@ -833,7 +834,7 @@ Panel_SetParamStringValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -1243,7 +1244,7 @@ RJ45_GetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -1303,7 +1304,7 @@ RJ45_SetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -1408,7 +1409,7 @@ RJ45_GetParamStringValue
         return 0;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return -1;
 }
 
@@ -1464,7 +1465,7 @@ RJ45_SetParamStringValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 

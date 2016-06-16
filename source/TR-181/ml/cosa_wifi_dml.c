@@ -78,6 +78,8 @@
 #include "cosa_wifi_internal.h"
 #include "plugin_main_apis.h"
 #include "wecb_common.h"
+#include "cosa_wecb_wrapper.h"
+
 #define TIME_NO_NEGATIVE(x) ((long)(x) < 0 ? 0 : (x))
 
 /***********************************************************************
@@ -310,7 +312,7 @@ WiFi_Extender_GetParamIntValue
 {
     /* check the parameter name and return the corresponding value */
 
-    CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName));
+    CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName));
     return FALSE;
 }
 
@@ -354,7 +356,7 @@ WiFi_Extender_GetParamUlongValue
 {
     /* check the parameter name and return the corresponding value */
 
-    CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName));
+    CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName));
     return FALSE;
 }
 
@@ -426,7 +428,7 @@ WiFi_Extender_GetParamStringValue
         return 0;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return -1;
 }
 
@@ -754,7 +756,7 @@ Radio_GetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -842,7 +844,7 @@ Radio_GetParamIntValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -1035,7 +1037,7 @@ Radio_GetParamUlongValue
         return TRUE;
     }
   
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -1344,7 +1346,7 @@ Radio_GetParamStringValue
     }
 
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return -1;
 }
 
@@ -1547,7 +1549,7 @@ Radio_SetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -1687,7 +1689,7 @@ Radio_SetParamIntValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -1930,7 +1932,7 @@ Radio_SetParamUlongValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -2069,7 +2071,7 @@ Radio_SetParamStringValue
     }
 
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -2122,7 +2124,7 @@ Radio_Validate
     /*Alias should be non-empty*/
     if (AnscSizeOfString(pWifiRadio->Radio.Cfg.Alias) == 0)
     {
-        CcspTraceWarning(("********Radio Validate:Failed Alias \n"));
+        CcspWecbTraceWarning(("********Radio Validate:Failed Alias \n"));
         AnscCopyString(pReturnParamName, "Alias");
         *puLength = AnscSizeOfString("Alias");
         return FALSE;
@@ -2140,7 +2142,7 @@ Radio_Validate
         
         if ( AnscEqualString(pWifiRadio->Radio.Cfg.Alias, pWifiRadio2->Radio.Cfg.Alias, TRUE) )
         {
-            CcspTraceWarning(("********Radio Validate:Failed Alias \n"));
+            CcspWecbTraceWarning(("********Radio Validate:Failed Alias \n"));
             AnscCopyString(pReturnParamName, "Alias");
             *puLength = AnscSizeOfString("Alias");
             return FALSE;
@@ -2149,7 +2151,7 @@ Radio_Validate
 
     if (!(CosaUtilChannelValidate2(pWifiRadioFull->Cfg.OperatingFrequencyBand,pWifiRadioFull->Cfg.Channel,pWifiRadioFull->StaticInfo.PossibleChannels)))
         {
-            CcspTraceWarning(("********Radio Validate:Failed Channel\n"));
+            CcspWecbTraceWarning(("********Radio Validate:Failed Channel\n"));
             AnscCopyString(pReturnParamName, "Channel");
             *puLength = AnscSizeOfString("Channel");
             return FALSE;
@@ -2160,7 +2162,7 @@ Radio_Validate
     {
         if (pWifiRadioFull->Cfg.OperatingStandards & COSA_DML_WIFI_STD_a)
         {
-            CcspTraceWarning(("********Radio Validate:Failed OperatingStandards\n"));
+            CcspWecbTraceWarning(("********Radio Validate:Failed OperatingStandards\n"));
             AnscCopyString(pReturnParamName, "OperatingStandards");
             *puLength = AnscSizeOfString("OperatingStandards");
             return FALSE;
@@ -2171,7 +2173,7 @@ Radio_Validate
     {
         if (pWifiRadioFull->Cfg.OperatingStandards & COSA_DML_WIFI_STD_b)
         {
-            CcspTraceWarning(("********Radio Validate:Failed OperatingStandards\n"));
+            CcspWecbTraceWarning(("********Radio Validate:Failed OperatingStandards\n"));
             AnscCopyString(pReturnParamName, "OperatingStandards");
             *puLength = AnscSizeOfString("OperatingStandards");
             return FALSE;
@@ -2179,7 +2181,7 @@ Radio_Validate
         
         if (pWifiRadioFull->Cfg.OperatingStandards & COSA_DML_WIFI_STD_g)
         {
-            CcspTraceWarning(("********Radio Validate:Failed OperatingStandards\n"));
+            CcspWecbTraceWarning(("********Radio Validate:Failed OperatingStandards\n"));
             AnscCopyString(pReturnParamName, "OperatingStandards");
             *puLength = AnscSizeOfString("OperatingStandards");
             return FALSE;
@@ -2188,7 +2190,7 @@ Radio_Validate
 /*
     if( (pWifiRadioFull->Cfg.TransmitPower != 25) && (pWifiRadioFull->Cfg.TransmitPower != 50) && (pWifiRadioFull->Cfg.TransmitPower != 100) )
     {
-         CcspTraceWarning(("********Radio Validate:Failed Transmit Power\n"));
+         CcspWecbTraceWarning(("********Radio Validate:Failed Transmit Power\n"));
          AnscCopyString(pReturnParamName, "TransmitPower");
          *puLength = AnscSizeOfString("TransmitPower");
          return FALSE;
@@ -2196,7 +2198,7 @@ Radio_Validate
 */
     if( (pWifiRadioFull->Cfg.BeaconInterval < 0) || (pWifiRadioFull->Cfg.BeaconInterval > 65535) )
     {
-         CcspTraceWarning(("********Radio Validate:Failed BeaconInterval\n"));
+         CcspWecbTraceWarning(("********Radio Validate:Failed BeaconInterval\n"));
          AnscCopyString(pReturnParamName, "BeaconInterval");
          *puLength = AnscSizeOfString("BeaconInterval");
          return FALSE;
@@ -2204,7 +2206,7 @@ Radio_Validate
 
     if( (pWifiRadioFull->Cfg.DTIMInterval < 0) || (pWifiRadioFull->Cfg.DTIMInterval > 255) )
     {
-         CcspTraceWarning(("********Radio Validate:Failed DTIMInterval\n"));
+         CcspWecbTraceWarning(("********Radio Validate:Failed DTIMInterval\n"));
          AnscCopyString(pReturnParamName, "DTIMInterval");
          *puLength = AnscSizeOfString("DTIMInterval");
          return FALSE;
@@ -2215,7 +2217,7 @@ Radio_Validate
 /*
     if( (pWifiRadioFull->Cfg.FragmentationThreshold > 2346) )
     {
-         CcspTraceWarning(("********Radio Validate:Failed FragThreshhold\n"));
+         CcspWecbTraceWarning(("********Radio Validate:Failed FragThreshhold\n"));
          AnscCopyString(pReturnParamName, "FragmentationThreshold");
          *puLength = AnscSizeOfString("FragmentationThreshold");
          return FALSE;
@@ -2223,7 +2225,7 @@ Radio_Validate
 
     if( (pWifiRadioFull->Cfg.RTSThreshold > 2347) )
     {
-         CcspTraceWarning(("********Radio Validate:Failed RTSThreshhold\n"));
+         CcspWecbTraceWarning(("********Radio Validate:Failed RTSThreshhold\n"));
          AnscCopyString(pReturnParamName, "RTSThreshold");
          *puLength = AnscSizeOfString("RTSThreshold");
          return FALSE;
@@ -2232,7 +2234,7 @@ Radio_Validate
     maxCount = (60 * 71582787);
     if(pWifiRadioFull->Cfg.AutoChannelRefreshPeriod > maxCount)
     {
-         CcspTraceWarning(("********Radio Validate:Failed AutoChannelRefreshPeriod\n"));
+         CcspWecbTraceWarning(("********Radio Validate:Failed AutoChannelRefreshPeriod\n"));
          AnscCopyString(pReturnParamName, "AutoChannelRefreshPeriod");
          *puLength = AnscSizeOfString("AutoChannelRefreshPeriod");
          return FALSE;
@@ -2242,7 +2244,7 @@ Radio_Validate
     if(pWifiRadioFull->Cfg.RegulatoryDomain[2] != 'I')
     {
          /* Currently driver supports only Inside a country code */
-         CcspTraceWarning(("********Radio Validate:Failed Regulatory Domain \n"));
+         CcspWecbTraceWarning(("********Radio Validate:Failed Regulatory Domain \n"));
          AnscCopyString(pReturnParamName, "RegulatoryDomain");
          *puLength = AnscSizeOfString("RegulatoryDomain");
          return FALSE;
@@ -2292,7 +2294,7 @@ Radio_Commit
     else
     {
         pWifiRadio->bRadioChanged = FALSE;
-        CcspTraceInfo(("WiFi Radio -- apply the change...\n"));
+        CcspWecbTraceInfo(("WiFi Radio -- apply the change...\n"));
     }
     
     return CosaDmlWiFiRadioSetCfg((ANSC_HANDLE)pMyObject->hPoamWiFiDm, pWifiRadioCfg);
@@ -2695,7 +2697,7 @@ SSID_GetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -2739,7 +2741,7 @@ SSID_GetParamIntValue
 {
     /* check the parameter name and return the corresponding value */
 
-    CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName));
+    CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName));
     return FALSE;
 }
 
@@ -2831,7 +2833,7 @@ SSID_GetParamUlongValue
     }
 
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -3025,7 +3027,7 @@ SSID_GetParamStringValue
     }
 
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return -1;
 }
 
@@ -3092,7 +3094,7 @@ SSID_SetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -3136,7 +3138,7 @@ SSID_SetParamIntValue
 {
     /* check the parameter name and set the corresponding value */
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -3184,7 +3186,7 @@ SSID_SetParamUlongValue
 
     /* check the parameter name and set the corresponding value */
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
 	/*
     if( AnscEqualString(ParamName, "SSIDIndex", TRUE))
     {
@@ -3321,7 +3323,7 @@ SSID_SetParamStringValue
     }
 
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -3467,7 +3469,7 @@ SSID_Commit
         else
         {
             pWifiSsid->bSsidChanged = FALSE;
-            CcspTraceInfo(("WiFi SSID -- apply the changes...\n"));
+            CcspWecbTraceInfo(("WiFi SSID -- apply the changes...\n"));
         }
         return CosaDmlWiFiSsidSetCfg((ANSC_HANDLE)pMyObject->hPoamWiFiDm, &pWifiSsid->SSID.Cfg);
     }
@@ -3591,7 +3593,7 @@ SSIDEncryption_GetParamUlongValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -3673,7 +3675,7 @@ SSIDEncryption_GetParamStringValue
         return 0;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return -1;
 }
 
@@ -3725,7 +3727,7 @@ SSIDEncryption_SetParamUlongValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -3770,7 +3772,7 @@ SSIDEncryption_SetParamStringValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -3852,7 +3854,7 @@ SSIDQoS_GetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -3883,7 +3885,7 @@ SSIDQoS_SetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -4005,7 +4007,7 @@ QosSettings_GetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -4063,7 +4065,7 @@ QosSettings_GetParamUlongValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -4095,7 +4097,7 @@ QosSettings_SetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -4257,7 +4259,7 @@ WPS_GetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -4312,7 +4314,7 @@ WPS_GetParamUlongValue
     }
 	*/
 	return TRUE;
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -4404,7 +4406,7 @@ WPS_GetParamStringValue
     }
 
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return -1;
 }
 
@@ -4457,7 +4459,7 @@ WPS_SetParamBoolValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -4512,7 +4514,7 @@ WPS_SetParamUlongValue
     }
 	*/
 	return TRUE;
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 
@@ -4576,7 +4578,7 @@ WPS_SetParamStringValue
         return TRUE;
     }
 
-    /* CcspTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
+    /* CcspWecbTraceWarning(("Unsupported parameter '%s'\n", ParamName)); */
     return FALSE;
 }
 

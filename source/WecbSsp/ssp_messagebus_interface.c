@@ -77,6 +77,7 @@
 **********************************************************************/
 
 #include "ssp_global.h"
+#include "cosa_wecb_wrapper.h"
 
 
 ANSC_HANDLE                 bus_handle         = NULL;
@@ -105,7 +106,7 @@ ssp_WifiMbi_MessageBusEngage
 
     if ( ! component_id || ! path )
     {
-        CcspTraceError((" !!! ssp_WifiMbi_MessageBusEngage: component_id or path is NULL !!!\n"));
+        CcspWecbTraceError((" !!! ssp_WifiMbi_MessageBusEngage: component_id or path is NULL !!!\n"));
     }
 
     /* Connect to message bus */
@@ -121,7 +122,7 @@ ssp_WifiMbi_MessageBusEngage
 
     if ( returnStatus != ANSC_STATUS_SUCCESS )
     {
-        CcspTraceError((" !!! Wifi Message Bus Init ERROR !!!\n"));
+        CcspWecbTraceError((" !!! Wifi Message Bus Init ERROR !!!\n"));
 
         return returnStatus;
     }
@@ -138,7 +139,7 @@ ssp_WifiMbi_MessageBusEngage
     /* Wait for PSM */
     waitConditionReady(bus_handle, PsmName, CCSP_DBUS_PATH_PSM, component_id);
 
-    CcspTraceInfo(("!!! Connected to message bus... bus_handle: 0x%08X !!!\n", bus_handle));
+    CcspWecbTraceInfo(("!!! Connected to message bus... bus_handle: 0x%08X !!!\n", bus_handle));
 
     CCSP_Msg_SleepInMilliSeconds(1000);
 
@@ -175,7 +176,7 @@ ssp_WifiMbi_MessageBusEngage
 
     if ( returnStatus != CCSP_Message_Bus_OK )
     {
-        CcspTraceError((" !!! CCSP_Message_Bus_Register_Path ERROR returnStatus: %d\n!!!\n", returnStatus));
+        CcspWecbTraceError((" !!! CCSP_Message_Bus_Register_Path ERROR returnStatus: %d\n!!!\n", returnStatus));
 
         return returnStatus;
     }
@@ -192,7 +193,7 @@ ssp_WifiMbi_MessageBusEngage
 
     if ( returnStatus != CCSP_Message_Bus_OK )
     {
-        CcspTraceError((" !!! CCSP_Message_Bus_Register_Event: CurrentSessionIDSignal ERROR returnStatus: %d!!!\n", returnStatus));
+        CcspWecbTraceError((" !!! CCSP_Message_Bus_Register_Event: CurrentSessionIDSignal ERROR returnStatus: %d!!!\n", returnStatus));
 
         return returnStatus;
     }

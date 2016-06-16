@@ -80,6 +80,7 @@
 
 #include "cosa_apis.h"
 #include "plugin_main_apis.h"
+#include "cosa_wecb_wrapper.h"
 
 #ifdef _ANSC_LINUX
 #include <stdio.h>
@@ -148,7 +149,7 @@ CosaUtilGetIfAddr
            memcpy(&ip4_addr.Value, ifr.ifr_ifru.ifru_addr.sa_data + 2,4);
         else {
            perror("CosaUtilGetIfAddr IOCTL failure.");
-           CcspTraceWarning(("Cannot get ipv4 address of netdev:%s\n",netdev));
+           CcspWecbTraceWarning(("Cannot get ipv4 address of netdev:%s\n",netdev));
         }
         close(fd);
     }
@@ -464,12 +465,12 @@ CosaUtilGetLowerLayers
                 varStruct.parameterValue = ucEntryNameValue;
                 if (COSAGetParamValueByPathName(g_MessageBusHandle,&varStruct,&ulEntryNameLen))
                 {
-                    AnscTraceFlow(("<HL>%s not found %s\n",__FUNCTION__,varStruct.parameterName ));
+                    CcspWecbTraceInfo(("<HL>%s not found %s\n",__FUNCTION__,varStruct.parameterName ));
                     break;
                 }
-                AnscTraceFlow(("<HL>%s ucEntryNameValue=%s\n", __FUNCTION__,ucEntryNameValue));
+                CcspWecbTraceInfo(("<HL>%s ucEntryNameValue=%s\n", __FUNCTION__,ucEntryNameValue));
                 _ansc_sscanf(ucEntryNameValue,"%d",&ulNumOfEntries);
-                AnscTraceFlow(("<HL>%s Wifi # of entries=%d\n", __FUNCTION__,ulNumOfEntries));
+                CcspWecbTraceInfo(("<HL>%s Wifi # of entries=%d\n", __FUNCTION__,ulNumOfEntries));
                 i = 0;
                 ulEntryInstanceNum =1;
                 while (i < ulNumOfEntries)
@@ -480,12 +481,12 @@ CosaUtilGetLowerLayers
                         
                     if (COSAGetParamValueByPathName(g_MessageBusHandle,&varStruct,&ulEntryNameLen))
                     {
-                        AnscTraceFlow(("<HL>%s WiFi instance(%d) not found\n", __FUNCTION__,
+                        CcspWecbTraceInfo(("<HL>%s WiFi instance(%d) not found\n", __FUNCTION__,
                             ulEntryInstanceNum));
                         ulEntryInstanceNum++;
                         continue;
                     }  
-                    AnscTraceFlow(("<HL>%s WiFi instance(%d) has name =%s inputName=%s\n", 
+                    CcspWecbTraceInfo(("<HL>%s WiFi instance(%d) has name =%s inputName=%s\n", 
                         __FUNCTION__,ulEntryInstanceNum,ucEntryNameValue,pKeyword));
                     if ( AnscEqualString(ucEntryNameValue, pKeyword, TRUE ) )
                     {
@@ -501,11 +502,11 @@ CosaUtilGetLowerLayers
             else if ( AnscEqualString(pTableStringToken->Name, "Device.Bridging.Bridge.", TRUE ) )
             {
                 ulNumOfEntries =  CosaGetParamValueUlong("Device.Bridging.BridgeNumberOfEntries");
-                CcspTraceInfo(("----------CosaUtilGetLowerLayers, bridgenum:%d\n", ulNumOfEntries));
+                CcspWecbTraceInfo(("----------CosaUtilGetLowerLayers, bridgenum:%d\n", ulNumOfEntries));
                 for ( i = 0 ; i < ulNumOfEntries; i++ )
                 {
                     ulEntryInstanceNum = CosaGetInstanceNumberByIndex("Device.Bridging.Bridge.", i);
-                    CcspTraceInfo(("----------CosaUtilGetLowerLayers, instance num:%d\n", ulEntryInstanceNum));
+                    CcspWecbTraceInfo(("----------CosaUtilGetLowerLayers, instance num:%d\n", ulEntryInstanceNum));
 
                     if ( ulEntryInstanceNum )
                     {
@@ -513,19 +514,19 @@ CosaUtilGetLowerLayers
                         _ansc_sprintf(ucLowerEntryPath, "%s%s", ucEntryFullPath, ".PortNumberOfEntries"); 
                         
                         ulEntryPortNum = CosaGetParamValueUlong(ucLowerEntryPath);  
-                        CcspTraceInfo(("----------CosaUtilGetLowerLayers, Param:%s,port num:%d\n",ucLowerEntryPath, ulEntryPortNum));
+                        CcspWecbTraceInfo(("----------CosaUtilGetLowerLayers, Param:%s,port num:%d\n",ucLowerEntryPath, ulEntryPortNum));
 
                         for ( j = 1; j<= ulEntryPortNum; j++) {
                             _ansc_sprintf(ucLowerEntryName, "%s%s%d", ucEntryFullPath, ".Port.", j);
                             _ansc_sprintf(ucEntryParamName, "%s%s%d%s", ucEntryFullPath, ".Port.", j, ".Name");
-                            CcspTraceInfo(("----------CosaUtilGetLowerLayers, Param:%s,Param2:%s\n", ucLowerEntryName, ucEntryParamName));
+                            CcspWecbTraceInfo(("----------CosaUtilGetLowerLayers, Param:%s,Param2:%s\n", ucLowerEntryName, ucEntryParamName));
                         
                             ulEntryNameLen = sizeof(ucEntryNameValue);
                             if ( ( 0 == CosaGetParamValueString(ucEntryParamName, ucEntryNameValue, &ulEntryNameLen)) &&
                                  AnscEqualString(ucEntryNameValue, pKeyword , TRUE ) )
                             {
                                 pMatchedLowerLayer =  AnscCloneString(ucLowerEntryName);
-                                CcspTraceInfo(("----------CosaUtilGetLowerLayers, J:%d, LowerLayer:%s\n", j, pMatchedLowerLayer));
+                                CcspWecbTraceInfo(("----------CosaUtilGetLowerLayers, J:%d, LowerLayer:%s\n", j, pMatchedLowerLayer));
                                 break;
                             }
                         }
@@ -555,7 +556,7 @@ CosaUtilGetLowerLayers
 
     /* Too many trace. Disable this  -- Yan */
     /*
-    CcspTraceWarning
+    CcspWecbTraceWarning
         ((
             "CosaUtilGetLowerLayers: %s matched LowerLayer(%s) with keyword %s in the table %s\n",
             pMatchedLowerLayer ? "Found a":"Not find any",
@@ -643,14 +644,14 @@ COSA_DML_LINK_TYPE CosaUtilGetLinkTypeFromStr(char* pLinkTypeStr)
 
 char* CosaUtilGetStrFromLinkTypePath(char* pLinkTypePath){
     int index=0;
-    AnscTraceFlow(("%s: %s\n", __FUNCTION__, pLinkTypePath));
+    CcspWecbTraceInfo(("%s: %s\n", __FUNCTION__, pLinkTypePath));
     for(index=0; index<COSA_DML_LINK_TYPE_TOTAL; index++)
     {
         //if(!strncmp(g_linktype_map[index].LinkTypePath, pLinkTypePath, 
         //        sizeof(g_linktype_map[index].LinkTypePath)))
         if(strstr(pLinkTypePath, g_linktype_map[index].LinkTypePath) != NULL)
         {
-            AnscTraceFlow(("%s: return index %d\n", __FUNCTION__, index));
+            CcspWecbTraceInfo(("%s: return index %d\n", __FUNCTION__, index));
             return g_linktype_map[index].LinkTypeStr;
         }
     }
@@ -661,12 +662,12 @@ char* CosaUtilGetStrFromLinkTypePath(char* pLinkTypePath){
 char* CosaUtilGetLinkTypeStr(COSA_DML_LINK_TYPE LinkType)
 {
     int index=0;
-    AnscTraceFlow(("%s: %d\n", __FUNCTION__, LinkType));
+    CcspWecbTraceInfo(("%s: %d\n", __FUNCTION__, LinkType));
     for(index=0; index<COSA_DML_LINK_TYPE_TOTAL; index++)
     {
         if(g_linktype_map[index].LinkType == LinkType)
         {
-            AnscTraceFlow(("%s: return index %d\n", __FUNCTION__, index));
+            CcspWecbTraceInfo(("%s: return index %d\n", __FUNCTION__, index));
             return g_linktype_map[index].LinkTypeStr;
         }
     }
@@ -676,12 +677,12 @@ char* CosaUtilGetLinkTypeStr(COSA_DML_LINK_TYPE LinkType)
 char* CosaUtilGetLinkTypePath(COSA_DML_LINK_TYPE LinkType)
 {
     int index=0;
-    AnscTraceFlow(("%s: %d\n", __FUNCTION__, LinkType));
+    CcspWecbTraceInfo(("%s: %d\n", __FUNCTION__, LinkType));
     for(index=0; index<COSA_DML_LINK_TYPE_TOTAL; index++)
     {
         if(g_linktype_map[index].LinkType == LinkType)
         {
-            AnscTraceFlow(("%s: return index %d\n", __FUNCTION__, index));
+            CcspWecbTraceInfo(("%s: return index %d\n", __FUNCTION__, index));
             return g_linktype_map[index].LinkTypePath;
         }
     }
@@ -691,14 +692,14 @@ char* CosaUtilGetLinkTypePath(COSA_DML_LINK_TYPE LinkType)
 COSA_DML_LINK_TYPE CosaUtilGetLinkTypeFromPath(char*pLinkTypePath)
 {
     int index=0;
-    AnscTraceFlow(("%s: %s\n", __FUNCTION__, pLinkTypePath));
+    CcspWecbTraceInfo(("%s: %s\n", __FUNCTION__, pLinkTypePath));
     for(index=0; index<COSA_DML_LINK_TYPE_TOTAL; index++)
     {
         //if(!strncmp(g_linktype_map[index].LinkTypePath, pLinkTypePath, 
         //        sizeof(g_linktype_map[index].LinkTypePath)))
         if(strstr(pLinkTypePath, g_linktype_map[index].LinkTypePath))
         {
-            AnscTraceFlow(("%s: return index %d\n", __FUNCTION__, index));
+            CcspWecbTraceInfo(("%s: return index %d\n", __FUNCTION__, index));
             return g_linktype_map[index].LinkType;
         }
     }
@@ -731,7 +732,7 @@ CosaUtilConstructLowerLayers
         _ansc_sprintf(pLowerLayersBuf, "%s%d", linkTypePath, InstNumber);
     }
 
-    AnscTraceFlow(("%s, size %d, buf len %d\n", pLowerLayersBuf, _ansc_strlen(pLowerLayersBuf), *pBufLen));
+    CcspWecbTraceInfo(("%s, size %d, buf len %d\n", pLowerLayersBuf, _ansc_strlen(pLowerLayersBuf), *pBufLen));
     return  ANSC_STATUS_SUCCESS;
 }
 
@@ -767,13 +768,13 @@ CosaUtilGetLowerLayerName
 
     if ( returnStatus == ANSC_STATUS_SUCCESS )
     {
-        AnscTraceFlow(("CosaUtilGetLowerLayerName -- value %s\n", pParamValueBuf));
+        CcspWecbTraceInfo(("CosaUtilGetLowerLayerName -- value %s\n", pParamValueBuf));
 
         return  returnStatus;
     }
     else
     {
-        AnscTraceWarning(("CosaUtilGetLowerLayerName -- failure %d, to retrieve %s\n", returnStatus, pParamPath));
+        CcspWecbTraceWarning(("CosaUtilGetLowerLayerName -- failure %d, to retrieve %s\n", returnStatus, pParamPath));
 
         return  returnStatus;
     }
@@ -801,12 +802,12 @@ CosaUtilFindBridgeName(char* pBridgePath)
     _ansc_sprintf(ucLowerEntryPath, "%s%s", pBridgePath, ".PortNumberOfEntries"); 
                         
     ulEntryPortNum = CosaGetParamValueUlong(ucLowerEntryPath);  
-    AnscTraceFlow(("%s: Param:%s,port num:%d\n", __FUNCTION__, ucLowerEntryPath, ulEntryPortNum));
+    CcspWecbTraceInfo(("%s: Param:%s,port num:%d\n", __FUNCTION__, ucLowerEntryPath, ulEntryPortNum));
 
     for ( j = 1; j<= ulEntryPortNum; j++) {
         _ansc_sprintf(ucLowerEntryName, "%s%s%d", pBridgePath, ".Port.", j);
         _ansc_sprintf(ucEntryParamName, "%s%s%d%s", pBridgePath, ".Port.", j, ".ManagementPort");
-        AnscTraceFlow(("%s: Param:%s,Param2:%s\n",__FUNCTION__, ucLowerEntryName, ucEntryParamName)); 
+        CcspWecbTraceInfo(("%s: Param:%s,Param2:%s\n",__FUNCTION__, ucLowerEntryName, ucEntryParamName)); 
                         
         bMgrPort = CosaGetParamValueBool(ucEntryParamName);
         if(bMgrPort)
@@ -818,7 +819,7 @@ CosaUtilFindBridgeName(char* pBridgePath)
             {
                 // not include port instance.
                 pMatchedBridgeName =  AnscCloneString(ucEntryNameValue);
-                AnscTraceFlow(("%s: J:%d, Name:%s\n", __FUNCTION__, j, pMatchedBridgeName));
+                CcspWecbTraceInfo(("%s: J:%d, Name:%s\n", __FUNCTION__, j, pMatchedBridgeName));
                 break;
             }
         }
@@ -849,25 +850,25 @@ CosaUtilFindBridgePath(char* pBridgeName)
     
 
     ulNumOfEntries =  CosaGetParamValueUlong("Device.Bridging.BridgeNumberOfEntries");
-    CcspTraceInfo(("----------CosaUtilGetLowerLayers, bridgenum:%d\n", ulNumOfEntries));
-    AnscTraceFlow(("%s: bridgenum:%d\n", __FUNCTION__, ulNumOfEntries));
+    CcspWecbTraceInfo(("----------CosaUtilGetLowerLayers, bridgenum:%d\n", ulNumOfEntries));
+    CcspWecbTraceInfo(("%s: bridgenum:%d\n", __FUNCTION__, ulNumOfEntries));
     for ( i = 0 ; i < ulNumOfEntries; i++ )
     {
         ulEntryInstanceNum = CosaGetInstanceNumberByIndex("Device.Bridging.Bridge.", i);
-        CcspTraceInfo(("----------CosaUtilGetLowerLayers, instance num:%d\n", ulEntryInstanceNum));
-        AnscTraceFlow(("%s: instance num:%d\n", __FUNCTION__, ulEntryInstanceNum));
+        CcspWecbTraceInfo(("----------CosaUtilGetLowerLayers, instance num:%d\n", ulEntryInstanceNum));
+        CcspWecbTraceInfo(("%s: instance num:%d\n", __FUNCTION__, ulEntryInstanceNum));
         if ( ulEntryInstanceNum )
         {
             _ansc_sprintf(ucEntryFullPath, "%s%d", "Device.Bridging.Bridge.", ulEntryInstanceNum);
             _ansc_sprintf(ucLowerEntryPath, "%s%s", ucEntryFullPath, ".PortNumberOfEntries"); 
                         
             ulEntryPortNum = CosaGetParamValueUlong(ucLowerEntryPath);  
-            CcspTraceInfo(("----------CosaUtilGetLowerLayers, Param:%s,port num:%d\n",ucLowerEntryPath, ulEntryPortNum));
+            CcspWecbTraceInfo(("----------CosaUtilGetLowerLayers, Param:%s,port num:%d\n",ucLowerEntryPath, ulEntryPortNum));
 
             for ( j = 1; j<= ulEntryPortNum; j++) {
                 _ansc_sprintf(ucLowerEntryName, "%s%s%d", ucEntryFullPath, ".Port.", j);
                 _ansc_sprintf(ucEntryParamName, "%s%s%d%s", ucEntryFullPath, ".Port.", j, ".Name");
-                CcspTraceInfo(("----------CosaUtilGetLowerLayers, Param:%s,Param2:%s\n", ucLowerEntryName, ucEntryParamName));
+                CcspWecbTraceInfo(("----------CosaUtilGetLowerLayers, Param:%s,Param2:%s\n", ucLowerEntryName, ucEntryParamName));
                         
                 ulEntryNameLen = sizeof(ucEntryNameValue);
                 if ( ( 0 == CosaGetParamValueString(ucEntryParamName, ucEntryNameValue, &ulEntryNameLen)) &&
@@ -875,7 +876,7 @@ CosaUtilFindBridgePath(char* pBridgeName)
                 {
                     // not include port instance.
                     pMatchedLowerLayer =  AnscCloneString(ucEntryFullPath);
-                    CcspTraceInfo(("----------CosaUtilGetLowerLayers, J:%d, LowerLayer:%s\n", j, pMatchedLowerLayer));
+                    CcspWecbTraceInfo(("----------CosaUtilGetLowerLayers, J:%d, LowerLayer:%s\n", j, pMatchedLowerLayer));
                     break;
                 }
             }
@@ -1011,7 +1012,7 @@ CosaUtilGetFullPathNameByKeyword
     }
 
 /*
-    CcspTraceWarning
+    CcspWecbTraceWarning
         ((
             "CosaUtilGetFullPathNameByKeyword: %s matched parameters(%s) with keyword %s in the table %s(%s)\n",
             pMatchedLowerLayer ? "Found a":"Not find any",
@@ -1963,40 +1964,40 @@ int main(int argc, char *argv[])
     switch (args.cmd) {
     case CMD_ISLOOP:
         if (IPv4Addr_IsLoopback(InaddrGetU32(&args.addr)))
-            AnscTraceFlow(("Is loopback\n"));
+            CcspWecbTraceInfo(("Is loopback\n"));
         else
-            AnscTraceFlow(("Not loopback\n"));
+            CcspWecbTraceInfo(("Not loopback\n"));
         break;
 
     case CMD_ISMULT:
         if (IPv4Addr_IsMulticast(InaddrGetU32(&args.addr)))
-            AnscTraceFlow(("Is multicast\n"));
+            CcspWecbTraceInfo(("Is multicast\n"));
         else
-            AnscTraceFlow("Not multicast\n");
+            CcspWecbTraceInfo("Not multicast\n");
         break;
 
     case CMD_COMP:
         if (IPv4Addr_IsSameNetwork(InaddrGetU32(&args.addr), 
                     InaddrGetU32(&args.net), InaddrGetU32(&args.mask)))
-            AnscTraceFlow("Is in same network\n");
+            CcspWecbTraceInfo("Is in same network\n");
         else
-            AnscTraceFlow("Not in same network\n");
+            CcspWecbTraceInfo("Not in same network\n");
         break;
 
     case CMD_ISBORAD:
         if (IPv4Addr_IsBroadcast(InaddrGetU32(&args.addr), 
                     InaddrGetU32(&args.net), InaddrGetU32(&args.mask)))
-            AnscTraceFlow("Is broadcast\n");
+            CcspWecbTraceInfo("Is broadcast\n");
         else
-            AnscTraceFlow("Not broadcast\n");
+            CcspWecbTraceInfo("Not broadcast\n");
         break;
 
     case CMD_ISNET:
         if (IPv4Addr_IsNetworkAddr(InaddrGetU32(&args.addr), 
                     InaddrGetU32(&args.net), InaddrGetU32(&args.mask)))
-            AnscTraceFlow("Is network address\n");
+            CcspWecbTraceInfo("Is network address\n");
         else
-            AnscTraceFlow("Not network address\n");
+            CcspWecbTraceInfo("Not network address\n");
         break;
 
     default:

@@ -74,6 +74,7 @@
 //#include "dml_tr181_custom_cfg.h"
 #include "plugin_main_apis.h"
 //#include "cosa_x_cisco_com_cablemodem_internal.h"
+#include "cosa_wecb_wrapper.h"
 
 /*PCOSA_DIAG_PLUGIN_INFO             g_pCosaDiagPluginInfo;*/
 COSAGetParamValueByPathNameProc    g_GetParamValueByPathNameProc;
@@ -191,13 +192,13 @@ CosaBackEndManagerInitialize
         pMyObject->has_wifi_slap  = 0;    
 #endif
 
-    AnscTraceWarning(("%s...\n", __FUNCTION__));
+    CcspWecbTraceWarning(("%s...\n", __FUNCTION__));
     printf("************* WECB initialize ******************\n");
     
     pMyObject->hWifi            = (ANSC_HANDLE)CosaWifiCreate();
 	
     pMyObject->hLED             = (ANSC_HANDLE)CosaLEDCreate();
-    AnscTraceWarning(("  CosaCableModemCreate done!\n"));
+    CcspWecbTraceWarning(("  CosaCableModemCreate done!\n"));
     
     /*create a thread to handle the sysevent asynchronously after all of the dmls created
      *
