@@ -1229,7 +1229,7 @@ bool SetRadios(HDK_ClientContext *pCtx , void *rt)
 				}
 				else
 				{
-					if(strchr(val, 'g') && strchr(val, 'n'))
+					if(strchr(val, 'g') && strchr(val, 'b'))
 					{
 						HDK_Set_Cisco_WiFiMode(pStr2, HDK_Element_Cisco_Mode, HDK_Enum_Cisco_WiFiMode_802_11bg);
 						log_printf(LOG_INFO, "Radio %d mode is 802.11bg\n", mask);
