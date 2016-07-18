@@ -81,6 +81,54 @@
 
 extern pthread_attr_t wecb_attr;
 extern pthread_mutex_t device_list_mutex;
+char g_WecbMaster[200] = "LOG.RDK.WECBMASTER\0";
+char *g_WecbCompName = g_WecbMaster;
+#define DEBUG_INI_NAME  "/etc/debug.ini"
+
+void UpdateRDKLogInfo( void );
+void sig_handler(int sig);
+
+void sig_handler(int sig)
+{
+	if ( sig == SIGALRM ) 
+    {
+    	signal(SIGALRM, sig_handler); /* reset it to this function */
+		UpdateRDKLogInfo( );
+        log_printf(LOG_INFO,"SIGALRM received!\n");
+	}
+}
+
+void UpdateRDKLogInfo( void )
+{
+	char buf[ 20 ] = { 0 };
+	if( !(syscfg_get( NULL, "X_RDKCENTRAL-COM_LogLevel", buf, sizeof(buf))))
+	{
+	    RDKLogLevel = atoi(buf);
+	}
+
+	memset(buf,0,sizeof(buf));
+	if( !(syscfg_get( NULL, "X_RDKCENTRAL-COM_LoggerEnable", buf, sizeof(buf))) )
+	{
+	    RDKLogEnable = (BOOL)atoi(buf);
+	}
+
+	memset(buf,0,sizeof(buf));
+	syscfg_get( NULL, "X_RDKCENTRAL-COM_Wecb_LogLevel", buf, sizeof(buf));
+    if( buf != NULL )
+    {
+        WECB_RDKLogLevel = atoi(buf);
+    }
+
+	memset(buf,0,sizeof(buf));
+    syscfg_get( NULL, "X_RDKCENTRAL-COM_Wecb_LoggerEnable", buf, sizeof(buf));
+    if( buf != NULL )
+    {
+        WECB_RDKLogEnable = (BOOL)atoi(buf);
+    }
+
+	log_printf(LOG_INFO,"RDKLogEnable[%d] RDKLogLevel[%d]\n",RDKLogLevel,RDKLogEnable); 	
+	log_printf(LOG_INFO,"WECB_RDKLogEnable[%d] WECB_RDKLogLevel[%d]\n",WECB_RDKLogLevel,WECB_RDKLogEnable); 		
+}
 
 int main()
 {
@@ -98,14 +146,27 @@ int main()
 
 	//set pid file to be monitored
 	pid_file = fopen("/var/run/wecb_master.pid", "w");
-	
+	#ifdef FEATURE_SUPPORT_RDKLOG
+   	 rdk_logger_init(DEBUG_INI_NAME);
+   	#endif
 	if(pid_file != NULL)
 	{
 		fprintf(pid_file, "%u", getpid());
 		fclose(pid_file);
 	}
+
+#ifdef FEATURE_SUPPORT_RDKLOG
+	/* Signal Handler registration needed for control the logger */
+	signal(SIGALRM, sig_handler);
+
+	/* To initialize syscfg() to maintain log level for wecb master */
+	syscfg_init();
+	UpdateRDKLogInfo( );
+#endif /* FEATURE_SUPPORT_RDKLOG */	
 	
 	rotate_file = fopen("/etc/cron/cron.everyminute/sysklogd_rotate.sh", "w");
+
+	log_printf(LOG_INFO, "WECB Master init\n");
 
 	if(rotate_file != NULL)
 	{
