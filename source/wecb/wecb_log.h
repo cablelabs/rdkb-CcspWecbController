@@ -75,11 +75,26 @@ extern "C" {
 
 
 #include "syslog.h"
+#include "cosa_wecb_wrapper.h" 
 
+#ifdef FEATURE_SUPPORT_RDKLOG
+#define log_printf(level, fmt, ...) \
+{\
+	if(LOG_ERR == level)\
+	CcspWecbTraceError((fmt, ##__VA_ARGS__))\
+	else if(LOG_INFO == level)\
+	CcspWecbTraceInfo((fmt, ##__VA_ARGS__))\
+	else if(LOG_WARNING == level)\
+	CcspWecbTraceWarning((fmt, ##__VA_ARGS__))\
+	else \
+	CcspWecbTraceInfo((fmt, ##__VA_ARGS__))\
+}
+#else
 #ifdef LOG_DEBUG
 #define log_printf(level, fmt, ...) syslog(level, "[%s:%d]" fmt, __FILE__, __LINE__, ##__VA_ARGS__)
 #else
 #define log_printf(level, fmt, ...) syslog(level, fmt, ##__VA_ARGS__)
+#endif
 #endif
 
 
