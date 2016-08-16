@@ -125,8 +125,8 @@ int WECB_UPnPHandler(Upnp_EventType EventType, void *Event, void *Cookie)
 			break;
 		}
 		*/
-        log_printf(LOG_INFO, "Find Device %p:Expires: %d  DeviceID:%s  DeviceType:%s  ServiceType:%s  ServiceVer:%s  Location:%s  Os:\"%s\"  Date:%s  Ext:\"%s\"\n", 
-        d_event, d_event->Expires, d_event->DeviceId, d_event->DeviceType, d_event->ServiceType, d_event->ServiceVer, d_event->Location, d_event->Os, d_event->Date, d_event->Ext);
+        //log_printf(LOG_INFO, "Find Device %p:Expires: %d  DeviceID:%s  DeviceType:%s  ServiceType:%s  ServiceVer:%s  Location:%s  Os:\"%s\"  Date:%s  Ext:\"%s\"\n", 
+        //d_event, d_event->Expires, d_event->DeviceId, d_event->DeviceType, d_event->ServiceType, d_event->ServiceVer, d_event->Location, d_event->Os, d_event->Date, d_event->Ext);
 
         //we only care hnap:WiFiExtender and hnap:WiFiExtenderV2 DeviceType
 		if(WECB_CheckNoneEmpty(d_event->Location) && WECB_CheckNoneEmpty(d_event->DeviceId) && WECB_CheckNoneEmpty(d_event->DeviceType))  
