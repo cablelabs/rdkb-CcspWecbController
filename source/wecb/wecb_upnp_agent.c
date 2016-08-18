@@ -79,7 +79,7 @@ extern int	recv_signal;
 
 UpnpClient_Handle ctrlpt_handle = -1;
 pthread_mutex_t device_list_mutex = PTHREAD_MUTEX_INITIALIZER;
-static char self_ip[32];
+static char self_ip[INET6_ADDRSTRLEN+1];
 extern pthread_attr_t wecb_attr;
 static int max_client = MAX_EXT_NUM;
 
