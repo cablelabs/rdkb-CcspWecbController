@@ -954,6 +954,10 @@ bool wecb_sync_thread(char *id)
 			log_printf(LOG_ERR, "init client context failed\n");
 			sleep(1);
 		}
+                else
+                {
+                        log_printf(LOG_WARNING, "Device %s is connected\n", uri);
+                }
 	}
 
 	while(1)
