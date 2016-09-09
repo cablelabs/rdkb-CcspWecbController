@@ -101,7 +101,7 @@ ssp_WifiMbi_MessageBusEngage
 {
     ANSC_STATUS                 returnStatus       = ANSC_STATUS_SUCCESS;
     CCSP_Base_Func_CB           cb                 = {0};
-    
+    int bPsmReady = 0; 
     char PsmName[256];
 
     if ( ! component_id || ! path )
@@ -137,8 +137,16 @@ ssp_WifiMbi_MessageBusEngage
     }
 
     /* Wait for PSM */
-    waitConditionReady(bus_handle, PsmName, CCSP_DBUS_PATH_PSM, component_id);
-
+    bPsmReady = waitConditionReady(bus_handle, PsmName, CCSP_DBUS_PATH_PSM, component_id);
+    if(bPsmReady == FALSE)
+    {
+        CcspWecbTraceError((" !!! PSM is not ready and maximum retry limit reached !!!\n"));
+    }
+    else
+    {
+        
+        CcspWecbTraceError((" !!! PSM is ready !!!\n"));
+    }
     CcspWecbTraceInfo(("!!! Connected to message bus... bus_handle: 0x%08X !!!\n", bus_handle));
 
     CCSP_Msg_SleepInMilliSeconds(1000);
