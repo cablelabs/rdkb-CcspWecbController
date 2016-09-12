@@ -53,7 +53,7 @@
 
 //For AP isolation, only supports Hotspot SSID now
 #define HS_SSID_NUM									2
-#define HS_SSID_INS									5
+#define HS_SSID_INS									7
 #define WECB_HS_BRIDGE_INS							"wecb_hhs_bridge_ins"
 #define WECB_HS_BRLAN_INS							"wecb_hhs_brlan_ins"
 #define WECB_HS_PVID_INS							"wecb_hhs_pvid_ins"
