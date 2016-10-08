@@ -76,6 +76,7 @@
 #include <openssl/crypto.h>
 #include "syscfg/syscfg.h"
 #include "autoconf.h"
+#include <time.h>
 
 sem_t sem;
 int	recv_signal = 0;
@@ -86,6 +87,7 @@ static token_t token1;
 static async_id_t async_id;
 static short server_port;
 static char  server_ip[19];
+static time_t time_before = 0, time_now = 0;
 
 // For DM and SNMP MIB using, this struct is no lock-protected, may unconsistent
 static struct ExtStatus wecb_status[MAX_EXT];
@@ -387,7 +389,11 @@ int wecb_event_listen(int *val)
         FD_ZERO(&rfds);
         FD_SET(se_fd1, &rfds);
 
-        log_printf(LOG_INFO, "Waiting for event ... \n");
+        time_now = time(NULL);
+        if(LOGGING_INTERVAL_SECS <= difftime(time_now, time_before))
+        {
+            log_printf(LOG_INFO, "Waiting for event ... \n");
+        }
         retval=select(se_fd1+1, &rfds, NULL, NULL, NULL);
 
         if(retval) {
@@ -449,11 +455,20 @@ int wecb_event_listen(int *val)
 				  ret = EVENT_WECB_HHS_BRIDGE;
 			  }
             } else {
-               log_printf(LOG_WARNING, "Received msg that is not a SE_MSG_NOTIFICATION (%d)\n", msg_type);
+               if(LOGGING_INTERVAL_SECS <= difftime(time_now, time_before))
+               {
+                   log_printf(LOG_WARNING, "Received msg that is not a SE_MSG_NOTIFICATION (%d)\n", msg_type);
+               }
             }
         } else {
            log_printf(LOG_ERR, "Received no event retval=%d\n", retval);
         }
+
+        if(LOGGING_INTERVAL_SECS <= difftime(time_now, time_before))
+        {
+            time_before = time_now;
+        }
+
     return ret;
 }
 
