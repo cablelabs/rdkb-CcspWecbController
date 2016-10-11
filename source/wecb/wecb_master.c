@@ -76,6 +76,7 @@
 
 #include <stdio.h>
 #include <sys/stat.h>
+#include <time.h>
 
 #include "syscfg/syscfg.h"
 
@@ -143,6 +144,7 @@ int main()
 	bool rt = false;
 	FILE *pid_file = NULL, *rotate_file = NULL;
 	struct stat statbuf;
+        time_t time_now = time(NULL), time_before = time(NULL);
 
 	//set pid file to be monitored
 	pid_file = fopen("/var/run/wecb_master.pid", "w");
@@ -225,7 +227,12 @@ int main()
 					mask ^= EVENT_WAN_UP;
 					break;
 				case EVENT_TIMEOUT:
-					log_printf(LOG_WARNING, "sysevent timeout\n");
+                                        time_now = time(NULL);
+                                        if(LOGGING_INTERVAL_SECS <= difftime(time_now, time_before))
+                                        {
+    					    log_printf(LOG_WARNING, "sysevent timeout\n");
+                                            time_before = time_now;
+                                        }
 					break;
 				case EVENT_WAN_DOWN:
 					log_printf(LOG_WARNING, "receive wan down event\n");
