@@ -202,6 +202,8 @@ int HDK_Client_Http_RequestSetBasicAuth(void* pRequestCtx,
 
     CURLcode code;
     char* pszUserPwd = 0;
+    int tmp = 0;
+
     do
     {
         code = curl_easy_setopt(pCtx->pCURL, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -209,7 +211,8 @@ int HDK_Client_Http_RequestSetBasicAuth(void* pRequestCtx,
         {
             break;
         }
-		int tmp = strlen(pszUsername) + strlen(pszPassword) + 2;
+        /*RDKB-7438,CID-33318, CID-32999; null check and use */
+        tmp = ((pszUsername) ? strlen(pszUsername) : 0 ) + ((pszPassword) ? strlen(pszPassword) : 0 ) + 2;
         pszUserPwd = (char*)malloc(tmp);
 
         if (!pszUserPwd)
@@ -217,7 +220,8 @@ int HDK_Client_Http_RequestSetBasicAuth(void* pRequestCtx,
             code = CURLE_OUT_OF_MEMORY;
             break;
         }
-		pCtx->pAuth = pszUserPwd;
+
+        pCtx->pAuth = pszUserPwd;
         sprintf(pszUserPwd, "%s:%s",
                 (pszUsername) ? pszUsername : "",
                 (pszPassword) ? pszPassword : "");
