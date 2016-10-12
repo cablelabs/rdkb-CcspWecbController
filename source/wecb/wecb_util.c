@@ -928,12 +928,12 @@ bool wecb_sync_thread(char *id)
 
 	PHnapDevice	pDevice = NULL;
 	unsigned int mask = 0;
-	char uri[128], *p;
+	char uri[128] = {0}, *p = NULL;
 	HDK_ClientContext *pCtx = NULL; 
 	int hnap_retry = 0;
 	memset(uri, 0, sizeof(uri));
 	int ret = false, radio_down = 0, i = 0, j = 0, index = -1;
-	char addr[160]; 
+	char addr[160] = {0};  /*RDKB-7440, CID-33260, init before use */
         bool v2_cap = false;
 
 	pthread_t self = pthread_self();	
