@@ -2754,8 +2754,12 @@ void HDK_Parse_ElementOpen(HDK_ParseContext* pParseCtx, char* pszNamespace, char
             if (pszElementNT != NULL)
             {
                 log_printf(LOG_ERR, "Unknown element '%s'\n", pszElementNT);
-                free(pszElementNT);
             }
+        }
+        /*RDKB-7439, CID-33314, free unused resources before exit */
+        if(pszElementNT != NULL)
+        {
+            free(pszElementNT);
         }
         return;
     }
