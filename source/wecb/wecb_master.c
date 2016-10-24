@@ -233,6 +233,7 @@ int main()
     					    log_printf(LOG_WARNING, "sysevent timeout\n");
                                             time_before = time_now;
                                         }
+					sleep(5);
 					break;
 				case EVENT_WAN_DOWN:
 					log_printf(LOG_WARNING, "receive wan down event\n");
