@@ -87,7 +87,6 @@ static token_t token1;
 static async_id_t async_id;
 static short server_port;
 static char  server_ip[19];
-static time_t time_before = 0, time_now = 0;
 
 // For DM and SNMP MIB using, this struct is no lock-protected, may unconsistent
 static struct ExtStatus wecb_status[MAX_EXT];
@@ -382,7 +381,7 @@ int wecb_event_listen(int *val)
     fd_set rfds;
     struct timeval tv;
     int retval;
-
+    static time_t time_before = 0, time_now = 0;
 
         tv.tv_sec = 30;
         tv.tv_usec=0;
@@ -493,6 +492,7 @@ int wecb_sk_server()
 	int i, j = 0;
 	enum PAM_EVENT event;
 	int opt = SO_REUSEADDR;
+        static time_t time_before = 0, time_now = 0;
 
 	//create socket to bind local IP and PORT
 	lsn_fd = socket(PF_UNIX, SOCK_STREAM, 0);
@@ -561,7 +561,11 @@ int wecb_sk_server()
 				}
 				pthread_mutex_unlock(&index_mutex);
 			}
-			log_printf(LOG_INFO, "received %d from pam\n", event);
+                        if(LOGGING_INTERVAL_SECS <= difftime(time_now, time_before))
+                        {
+                            log_printf(LOG_INFO, "received %d from pam\n", event);
+                            time_before = time_now;
+                        }
 			close(pam_fd);
 		}
 	}
