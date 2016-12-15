@@ -1086,6 +1086,7 @@ bool wecb_sync_thread(char *id)
 				if(hnap_retry >= MAX_RETRY)
 				{
 					log_printf(LOG_ERR, "Device:%s is not ready\n", uri);
+                                        log_printf(LOG_ERR, "Device:%s is not in sync\n", uri);
 					sleep(SYNC_INTERVAL);
 					break;
 				}
@@ -1384,6 +1385,7 @@ bool wecb_sync_thread(char *id)
 				if(hnap_retry >= MAX_RETRY)
 				{
                log_printf(LOG_ERR, "Device:%s is not ready\n", uri);
+               log_printf(LOG_ERR, "Device:%s is not in sync\n", uri);
 					sleep(SYNC_INTERVAL);
 					hnap_retry = 0;
 					break;
